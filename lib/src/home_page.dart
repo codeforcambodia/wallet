@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+// import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: <String>[
@@ -52,11 +53,14 @@ class homepageState extends State<home_page>{
                   borderWidth: 5,
                   borderColor: Colors.white,
                 ),
+                Container(margin: EdgeInsets.only(left: 20.0)),
                 Column(children: <Widget>[
                   Text(_account.displayName),
                   Text(_account.email)
                 ],
-                crossAxisAlignment: CrossAxisAlignment.center,),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                ),
                 googleButton()
               ],
             ),
@@ -85,11 +89,11 @@ class homepageState extends State<home_page>{
     } else {
       return IconButton(
         icon: Icon(Icons.power_settings_new),
+        iconSize: 28.0,
         onPressed: () => googleSignOut(),
       );
     }
   }
-
 
   void googleSignUp() {
     _googleSignIn.signIn();
