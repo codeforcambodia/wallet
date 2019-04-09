@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Google_sign_up</string>    
+    <string name="facebook_app_id">2000018596961531</string>
+    <string name="fb_login_protocol_scheme">fb2000018596961531</string>
+
+</resources> 
