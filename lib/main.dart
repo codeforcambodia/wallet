@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'app.dart';
 import 'package:flutter/rendering.dart';
+import './src/screen/login_screen.dart';
 
 void main () {
   // debugPaintSizeEnabled = true;
   runApp(App());
+}
+
+class App extends StatelessWidget{
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Google sign up",
+      home: login_screen(),
+    );
+  }
 }
