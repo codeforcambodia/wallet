@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../model/model.dart';
 import './input_field_screen.dart';
+import 'dart:ui';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
@@ -60,23 +61,58 @@ class loginState extends State<login_screen> {
 
   Widget build(BuildContext context) {    
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: EdgeInsets.only(left:20.0, right: 20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
-              createNewAcc(context),
-              googleButton(),
-              facebookButton(),
-            ],
+      body: new Stack(
+        children: <Widget>[
+          new Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage('assets/blur.jpg'),
+                fit: BoxFit.cover,
+              )
+            ),
+            child: BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.2)
+                ),
+              ),
+            ),
           ),
-        ),
+          Container(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
+                  new Row(children: <Widget>[Text('')],),
+                  new Row(children: <Widget>[Text('')],),
+                  createNewAcc(context),
+                  googleButton(),
+                  facebookButton(),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
+  // Container(
+  //       child: Center(
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
+  //             new Row(children: <Widget>[Text('')],),
+  //             new Row(children: <Widget>[Text('')],),
+  //             createNewAcc(context),
+  //             googleButton(),
+  //             facebookButton(),
+  //           ],
+  //         ),
+  //       ),
+  //     )
 
   Widget googleButton() {
     if (user_data == null) {
@@ -109,6 +145,7 @@ class loginState extends State<login_screen> {
 
   Widget createNewAcc(context) {
     return RaisedButton(
+      color: Colors.white,
       child: Text('Create new account'),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => fill_field() ));
