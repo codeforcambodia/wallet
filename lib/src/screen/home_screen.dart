@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class home_screen extends StatefulWidget{
   @override
@@ -9,18 +10,38 @@ class home_screen extends StatefulWidget{
 }
 
 class homeState extends State<home_screen>{
+
+  TabController _tabController;
+  bool progess = false;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Theme(
         data: ThemeData(brightness: Brightness.dark),
         child: Scaffold(
-          appBar: AppBar(
-            title: Center(
-              child: Text("Google Sign Up"),
+          key: _scaffoldKey,
+          drawer: new Drawer(
+            child: ListView(
+              children: <Widget>[
+                new DrawerHeader(
+                  child: Text('Hello '),
+                )
+              ],
             ),
           ),
-          body: Text('Hello world'),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Hello daveat"),
+                signOutButton(),
+                progess == true ? CircularProgressIndicator() : Row()
+              ],
+            ),
+          ),
           bottomNavigationBar: TabBar(
             tabs: <Widget>[
               Tab(
@@ -29,22 +50,39 @@ class homeState extends State<home_screen>{
                 ),
                 text: "Home",
               ),
-              Tab(icon: Icon(Icons.search), text: "Search"),
               Tab(
-                icon: Icon(Icons.file_download),
-                text: "Downloads",
+                icon: Icon(Icons.account_circle),
+                text: "Profile",
               ),
               Tab(
-                icon: Icon(Icons.list),
-                text: "More",
-              )
+                icon: Icon(Icons.menu),
+                text: "Menu",
+              ),
             ],
+            onTap: (index) {
+              if ( index == 2) _scaffoldKey.currentState.openDrawer();
+            },
             unselectedLabelColor: Color(0xff999999),
             labelColor: Colors.white,
             indicatorColor: Colors.transparent,
           ),
         ),
       ),
+    );
+  }
+
+  Widget signOutButton() {
+    return RaisedButton(
+      child: Text('Sign Out'),
+      onPressed: () {
+        setState(() {
+          progess = true;
+          Timer(
+            Duration(seconds: 3),
+            () => Navigator.of(context).pop()
+          );
+        });
+      },
     );
   }
 }

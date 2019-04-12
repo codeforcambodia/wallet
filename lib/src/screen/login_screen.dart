@@ -74,7 +74,7 @@ class loginState extends State<login_screen> {
               filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2)
+                  color: Colors.grey.withOpacity(0.2)
                 ),
               ),
             ),
@@ -98,21 +98,6 @@ class loginState extends State<login_screen> {
       ),
     );
   }
-  // Container(
-  //       child: Center(
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: <Widget>[
-  //             new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
-  //             new Row(children: <Widget>[Text('')],),
-  //             new Row(children: <Widget>[Text('')],),
-  //             createNewAcc(context),
-  //             googleButton(),
-  //             facebookButton(),
-  //           ],
-  //         ),
-  //       ),
-  //     )
 
   Widget googleButton() {
     if (user_data == null) {
@@ -146,7 +131,7 @@ class loginState extends State<login_screen> {
   Widget createNewAcc(context) {
     return RaisedButton(
       color: Colors.white,
-      child: Text('Create new account'),
+      child: Text('Login with account'),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => fill_field() ));
       },
