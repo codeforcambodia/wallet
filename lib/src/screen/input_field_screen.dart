@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import './home_screen.dart';
+import '../model/model.dart';
 
 class fill_field extends StatefulWidget{
   @override
@@ -14,10 +15,19 @@ class fieldState extends State<fill_field>{
 
   bool showLogin = false;
   bool isProgress = false;
+  final formkey = GlobalKey<FormState>();
+
+  //get user data sign up
+  var fullname = TextEditingController();
+  var email = TextEditingController();
+  var password = TextEditingController();
+  var confirm_password = TextEditingController();
+
+  // Map<String, TextEditingController> 
 
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomPadding: true,
       body: new Container(
         child: Column(
           children: <Widget>[
@@ -45,29 +55,30 @@ class fieldState extends State<fill_field>{
             new Container(
               padding: EdgeInsets.only(left: 30.0, right: 30.0),
               child: Center(
-                child: showLogin == false ? Column(
+                child: Column(
                   children: <Widget>[
                     //Image logo
                     new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
                     new Row(children: <Widget>[Text('')],),
                     //Field input
-                    user_login(),
-                    new Row(children: <Widget>[Text('')],),
-                    //Button
-                    loginBUtton(),
-                    haveAccount()
-                  ],
-                ) : Column(
-                  children: <Widget>[
-                    //Image logo
-                    new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
-                    new Row(children: <Widget>[Text('')],),
-                    //Field input
-                    user_signup(),
-                    new Row(children: <Widget>[Text('')],),
-                    //Button
-                    signUpButton(),
-                    haveAccount()
+                    showLogin == false ? Column 
+                    (
+                      children: <Widget>[
+                        user_login(),
+                        new Row(children: <Widget>[Text('')],),
+                        //Button
+                        loginBUtton(),
+                        haveAccount()  
+                      ],
+                    ) : Column(
+                      children: <Widget>[
+                        user_signup(),
+                        new Row(children: <Widget>[Text('')],),
+                        //Button
+                        signUpButton(),
+                        haveAccount()
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -80,48 +91,66 @@ class fieldState extends State<fill_field>{
 
   //Below is Field input
   Widget user_signup() {
-    return Column(
-      children: <Widget>[
-        new TextField(
-          decoration: new InputDecoration(
-            labelText: 'Full Name'
+    return Form(
+      key: formkey,
+      child: Column(
+        children: <Widget>[
+          new TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            controller: fullname,
+            decoration: new InputDecoration(
+              labelText: 'Full Name'
+            ),
+          )
+          ,
+          new TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            controller: email,
+            validator: (value) => value.contains('@') ? null : 'Invalid email',
+            decoration: new InputDecoration(
+              labelText: 'Email',
+            ),
           ),
-        )
-        ,
-        new TextField(
-          decoration: new InputDecoration(
-            labelText: 'Email',
+          new TextFormField(
+            controller: password,
+            obscureText: true,
+            validator: (value) => value.length > 4 ? null : 'Invalid password',
+            decoration: new InputDecoration(
+              labelText: 'Password'
+            ),
           ),
-        ),
-        new TextField(
-          obscureText: true,
-          decoration: new InputDecoration(
-            labelText: 'Password'
-          ),
-        ),
-        new TextField(
-          decoration: new InputDecoration(
-            labelText: 'Comfirm password'
-          ),
-        )
-      ],
+          new TextFormField(
+            controller: confirm_password,
+            obscureText: true,
+            decoration: new InputDecoration(
+              labelText: 'Comfirm password'
+            ),
+          )
+        ],
+      )
     );
   }
 
   Widget user_login() {
-    return Column(
-      children: <Widget>[
-        new TextField(
-          decoration: new InputDecoration(
-            labelText: 'Email'
+    return Form(
+      key: formkey,
+      child: Column(
+        children: <Widget>[
+          new TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) => value.contains('@') ? null : 'Invalid Email',
+            decoration: new InputDecoration(
+              labelText: 'Email'
+            ),
           ),
-        ),
-        new TextField(
-          decoration: new InputDecoration(
-            labelText: 'Password'
-          ),
-        )
-      ],
+          new TextFormField(
+            validator: (value) => value.length >= 4 ? null : 'Invalid password',
+            decoration: new InputDecoration(
+              labelText: 'Password'
+            ),
+          )
+        ],
+      )
     );
   }
   
@@ -134,6 +163,11 @@ class fieldState extends State<fill_field>{
       child: Text('Sign Un'),
       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       onPressed: () {
+        print(fullname.text);
+        print(email.text);
+        print(password.text);
+        print(confirm_password.text);
+        formkey.currentState.validate();
       },
     );
   }
@@ -146,11 +180,11 @@ class fieldState extends State<fill_field>{
       child: Text('Log In'),
       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+        formkey.currentState.validate();
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
       },
     );
   }
-  
 
   Widget haveAccount() {
     return FlatButton(

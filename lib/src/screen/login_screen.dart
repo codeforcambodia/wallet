@@ -32,7 +32,7 @@ class loginState extends State<login_screen> {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {
-        user_data = User_Data(account.displayName, account.email, account.id, account.photoUrl);
+        user_data = User_Data(account.displayName, account.email, account.id, account.photoUrl, "");
         print(user_data);
       });
     });
@@ -50,6 +50,7 @@ class loginState extends State<login_screen> {
         break;
       case FacebookLoginStatus.cancelledByUser:
         print("CancelledByUser");
+        
         // onLoginStatusChanged(false);
         break;
       case FacebookLoginStatus.loggedIn:

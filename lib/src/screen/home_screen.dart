@@ -36,7 +36,7 @@ class homeState extends State<home_screen>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Hello daveat"),
+                Text("Hello PichTa"),
                 signOutButton(),
                 progess == true ? CircularProgressIndicator() : Row()
               ],
