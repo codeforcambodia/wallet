@@ -29,62 +29,65 @@ class fieldState extends State<fill_field>{
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: new Container(
-        child: Column(
-          children: <Widget>[
-            // new Container(
-            //   decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //       image: new AssetImage('assets/blur.jpg'),
-            //       fit: BoxFit.cover
-            //     )
-            //   ),
-            //   child: BackdropFilter(
-            //     filter: new ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
-            //     child: Container(
-            //       decoration: BoxDecoration( 
-            //         color: Colors.grey.withOpacity(0.2)
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            new AppBar(
-              backgroundColor: Colors.transparent,
-              elevation:  0.0,
-              iconTheme: IconThemeData(color: Colors.blueAccent),
-            ),
-            new Container(
-              padding: EdgeInsets.only(left: 30.0, right: 30.0),
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    //Image logo
-                    new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
-                    new Row(children: <Widget>[Text('')],),
-                    //Field input
-                    showLogin == false ? Column 
-                    (
-                      children: <Widget>[
-                        user_login(),
-                        new Row(children: <Widget>[Text('')],),
-                        //Button
-                        loginBUtton(),
-                        haveAccount()  
-                      ],
-                    ) : Column(
-                      children: <Widget>[
-                        user_signup(),
-                        new Row(children: <Widget>[Text('')],),
-                        //Button
-                        signUpButton(),
-                        haveAccount()
-                      ],
-                    )
-                  ],
+        child: new SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              // new Container(
+              //   decoration: BoxDecoration(
+              //     image: DecorationImage(
+              //       image: new AssetImage('assets/blur.jpg'),
+              //       fit: BoxFit.cover
+              //     )
+              //   ),
+              //   child: BackdropFilter(
+              //     filter: new ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
+              //     child: Container(
+              //       decoration: BoxDecoration( 
+              //         color: Colors.grey.withOpacity(0.2)
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              new AppBar(
+                backgroundColor: Colors.transparent,
+                elevation:  0.0,
+                iconTheme: IconThemeData(color: Colors.blueAccent),
+              ),
+              new Container(
+                padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      //Image logo
+                      new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
+                      new Row(children: <Widget>[Text('')],),
+                      //Field input
+                      showLogin == false ? Column 
+                      (
+                        children: <Widget>[
+                          user_login(),
+                          new Row(children: <Widget>[Text('')],),
+                          //Button
+                          loginBUtton(),
+                          haveAccount()  
+                        ],
+                      ) : Column(
+                        children: <Widget>[
+                          user_signup(),
+                          new Row(children: <Widget>[Text('')],),
+                          //Button
+                          signUpButton(),
+                          haveAccount()
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          )
+        )
+        ,
       ),
     );
   }
@@ -97,6 +100,7 @@ class fieldState extends State<fill_field>{
         children: <Widget>[
           new TextFormField(
             keyboardType: TextInputType.emailAddress,
+            validator: (value) => value != '' ? null : 'Field Username',
             controller: fullname,
             decoration: new InputDecoration(
               labelText: 'Full Name'
@@ -120,7 +124,7 @@ class fieldState extends State<fill_field>{
             ),
           ),
           new TextFormField(
-            controller: confirm_password,
+            validator: (value) => value == password ? null : 'Invalid password',
             obscureText: true,
             decoration: new InputDecoration(
               labelText: 'Comfirm password'
