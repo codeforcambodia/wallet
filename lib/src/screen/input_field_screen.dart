@@ -13,6 +13,9 @@ class fill_field extends StatefulWidget{
 
 class fieldState extends State<fill_field>{
 
+  String useremail = "condaveat@gmail.com";
+  String userpasword = "1234";
+
   bool showLogin = false;
   bool isProgress = false;
   final formkey = GlobalKey<FormState>();
@@ -32,22 +35,22 @@ class fieldState extends State<fill_field>{
         child: new SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              // new Container(
-              //   decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: new AssetImage('assets/blur.jpg'),
-              //       fit: BoxFit.cover
-              //     )
-              //   ),
-              //   child: BackdropFilter(
-              //     filter: new ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
-              //     child: Container(
-              //       decoration: BoxDecoration( 
-              //         color: Colors.grey.withOpacity(0.2)
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              new Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage('assets/blur.jpg'),
+                fit: BoxFit.cover,
+              )
+            ),
+            child: BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2)
+                ),
+              ),
+            ),
+          ),
               new AppBar(
                 backgroundColor: Colors.transparent,
                 elevation:  0.0,
@@ -100,7 +103,9 @@ class fieldState extends State<fill_field>{
         children: <Widget>[
           new TextFormField(
             keyboardType: TextInputType.emailAddress,
-            validator: (value) => value != '' ? null : 'Field Username',
+            validator: (value) {
+              if ( value == '') return 'Fill Username';
+            },
             controller: fullname,
             decoration: new InputDecoration(
               labelText: 'Full Name'
@@ -110,7 +115,11 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             keyboardType: TextInputType.emailAddress,
             controller: email,
-            validator: (value) => value.contains('@') ? null : 'Invalid email',
+            validator: (value) {
+              if ( value == '') return 'Fill email';
+              else if (!value.contains('@')) return 'Invalid email';
+              else return null;
+            },
             decoration: new InputDecoration(
               labelText: 'Email',
             ),
@@ -118,13 +127,23 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             controller: password,
             obscureText: true,
-            validator: (value) => value.length > 4 ? null : 'Invalid password',
+            validator: (value) {
+              if( value == '') {return 'Fill password';}
+              else if ( value.length < 5)return 'Password must be 5digit';
+              else return null;
+            },
             decoration: new InputDecoration(
               labelText: 'Password'
             ),
           ),
           new TextFormField(
-            validator: (value) => value == password ? null : 'Invalid password',
+            validator: (value) {
+
+              if( value == '') {return 'Fill password';}
+              else if ( value.length < 4)return 'Password must be 5digit';
+              else if ( value != password.toString() )return 'Invalid password';
+              else return null;
+            },
             obscureText: true,
             decoration: new InputDecoration(
               labelText: 'Comfirm password'
@@ -141,14 +160,25 @@ class fieldState extends State<fill_field>{
       child: Column(
         children: <Widget>[
           new TextFormField(
+            controller: email,
             keyboardType: TextInputType.emailAddress,
-            validator: (value) => value.contains('@') ? null : 'Invalid Email',
+            validator: (value) {
+              if ( value == ''){ return 'Fill your email';}
+              else if (!value.contains('@')) {return 'Invalid email';}
+              else return null;
+            },
             decoration: new InputDecoration(
               labelText: 'Email'
             ),
           ),
           new TextFormField(
-            validator: (value) => value.length >= 4 ? null : 'Invalid password',
+            controller: password,
+            obscureText: true,
+            validator: (value) {
+              if( value == '') {return 'Fill your password';}
+              else if ( value.length < 4) { return 'Password must be 4digit';}
+              else return null;
+            },
             decoration: new InputDecoration(
               labelText: 'Password'
             ),
@@ -184,8 +214,11 @@ class fieldState extends State<fill_field>{
       child: Text('Log In'),
       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       onPressed: () {
+        if ( email.text == useremail && password.text == userpasword) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+          print('Success');
+        } else print('Not yet');
         formkey.currentState.validate();
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import './profile_screen.dart';
 
 class home_screen extends StatefulWidget{
   @override
@@ -26,21 +27,53 @@ class homeState extends State<home_screen>{
           drawer: new Drawer(
             child: ListView(
               children: <Widget>[
-                new DrawerHeader(
-                  child: Text('Hello '),
+                //Header of drawer
+                DrawerHeader(
+                  child: Column(
+                    children: <Widget>[
+                      new CircleAvatar(
+                        minRadius: 50.0,
+                        maxRadius: 50.0,
+                        backgroundImage: AssetImage('assets/abstract_logo_vector.png'),
+                      ),
+                      Container(margin: EdgeInsets.only(bottom: 5.0),),
+                      Text('Daveat Corn'),
+                    ],
+                  ),
+                ),
+                //Body of drawer
+                new ListTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(left: 10.0),),
+                      Icon(Icons.home),
+                      Container(margin: EdgeInsets.only(right: 10.0),),
+                      Text('Home')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                new ListTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(left: 10.0),),
+                      Icon(Icons.account_circle),
+                      Container(margin: EdgeInsets.only(right: 10.0),),
+                      Text('Profile')
+                    ],
+                  ),
+                  onTap: () {},
                 )
               ],
             ),
           ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("Hello PichTa"),
-                signOutButton(),
-                progess == true ? CircularProgressIndicator() : Row()
-              ],
-            ),
+          body: TabBarView(
+            children: <Widget>[
+              Center(
+                child: Text('Hello page 1'),
+              ),
+              profile_screen()
+            ],
           ),
           bottomNavigationBar: TabBar(
             tabs: <Widget>[
