@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../model/model.dart';
 import './input_field_screen.dart';
 import 'dart:ui';
+import './home_screen.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
@@ -15,6 +16,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
 ]);
 
 FacebookLogin facebookLogin = new FacebookLogin();
+var result;
 
 class login_screen extends StatefulWidget {
   @override
@@ -28,21 +30,22 @@ class loginState extends State<login_screen> {
 
   @override
   void initState() {
-
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {
-        user_data = User_Data(account.displayName, account.email, account.id, account.photoUrl, "");
+        user_data = User_Data(account.displayName, account.email, account.id,
+            account.photoUrl, "");
         print(user_data);
       });
     });
   }
 
-  void initiateFacebookLogin() async {
-    final result = await facebookLogin.logInWithReadPermissions(['email']);
+  Future<String> initiateFacebookLogin() async {
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    result = await facebookLogin.logInWithReadPermissions(['email']);
     final token = result.accessToken.token;
     final graphResponse = await http.get(
-      'https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');
+        'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
     switch (result.status) {
       case FacebookLoginStatus.error:
         print("Error");
@@ -50,33 +53,32 @@ class loginState extends State<login_screen> {
         break;
       case FacebookLoginStatus.cancelledByUser:
         print("CancelledByUser");
-        
+
         // onLoginStatusChanged(false);
         break;
       case FacebookLoginStatus.loggedIn:
         print("LoggedIn");
         // onLoginStatusChanged(true);
         break;
-    }  
+    }
+    print(graphResponse.body);
+    return graphResponse.body;
   }
 
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Scaffold(
       body: new Stack(
         children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage('assets/blur.jpg'),
-                fit: BoxFit.cover,
-              )
-            ),
+                image: new DecorationImage(
+              image: new AssetImage('assets/blur.jpg'),
+              fit: BoxFit.cover,
+            )),
             child: BackdropFilter(
               filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2)
-                ),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
               ),
             ),
           ),
@@ -85,9 +87,17 @@ class loginState extends State<login_screen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Image.asset('assets/abstract_logo_vector.png',width: 300.0, height: 200.0,),
-                  new Row(children: <Widget>[Text('')],),
-                  new Row(children: <Widget>[Text('')],),
+                  new Image.asset(
+                    'assets/abstract_logo_vector.png',
+                    width: 300.0,
+                    height: 200.0,
+                  ),
+                  new Row(
+                    children: <Widget>[Text('')],
+                  ),
+                  new Row(
+                    children: <Widget>[Text('')],
+                  ),
                   createNewAcc(context),
                   googleButton(),
                   facebookButton(),
@@ -120,7 +130,12 @@ class loginState extends State<login_screen> {
   Widget facebookButton() {
     return FacebookSignInButton(
       onPressed: () {
-        // initiateFacebookLogin();
+        initiateFacebookLogin();
+        if (result.status == FacebookLoginStatus.loggedIn) {
+          print(result.status);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => home_screen()));
+        }
       },
     );
   }
@@ -134,7 +149,8 @@ class loginState extends State<login_screen> {
       color: Colors.white,
       child: Text('Login with account'),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => fill_field() ));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => fill_field()));
       },
     );
   }
@@ -146,12 +162,10 @@ class loginState extends State<login_screen> {
 
   void googleSignOut() {
     _googleSignIn.signOut();
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
-  Future<void> facebookSignOut() async{
+  Future<void> facebookSignOut() async {
     var channel = MethodChannel('com.roughike/flutter_facebook_login');
     channel.invokeMethod('logOut');
   }
