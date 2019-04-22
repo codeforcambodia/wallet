@@ -9,14 +9,15 @@ import '../model/model.dart';
 import './input_field_screen.dart';
 import 'dart:ui';
 import './home_screen.dart';
+import 'dart:convert';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
   'https://www.googleapis.com/auth/contacts.readonly'
 ]);
 
-FacebookLogin facebookLogin = new FacebookLogin();
-var result;
+
+var getStatus;
 
 class login_screen extends StatefulWidget {
   @override
@@ -33,20 +34,25 @@ class loginState extends State<login_screen> {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {
-        user_data = User_Data(account.displayName, account.email, account.id,
+        user_data = User_Data.fromGoogle(account.displayName, account.email, account.id,
             account.photoUrl, "");
         print(user_data);
       });
     });
+    print('Hello startup');
   }
 
-  Future<String> initiateFacebookLogin() async {
+  Future<List<User_Data>>initiateFacebookLogin() async {
+
+    FacebookLogin facebookLogin = new FacebookLogin();
+    List<User_Data> user = [];
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
-    result = await facebookLogin.logInWithReadPermissions(['email']);
+    final result = await facebookLogin.logInWithReadPermissions(['email']);
     final token = result.accessToken.token;
     final graphResponse = await http.get(
         'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
     switch (result.status) {
+      
       case FacebookLoginStatus.error:
         print("Error");
         // onLoginStatusChanged(false);
@@ -61,8 +67,10 @@ class loginState extends State<login_screen> {
         // onLoginStatusChanged(true);
         break;
     }
-    print(graphResponse.body);
-    return graphResponse.body;
+    final convert = jsonDecode(graphResponse.body);
+    user.add(convert);
+    print(user.length);
+    return convert;
   }
 
   Widget build(BuildContext context) {
@@ -130,12 +138,7 @@ class loginState extends State<login_screen> {
   Widget facebookButton() {
     return FacebookSignInButton(
       onPressed: () {
-        initiateFacebookLogin();
-        if (result.status == FacebookLoginStatus.loggedIn) {
-          print(result.status);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => home_screen()));
-        }
+        facebookLogin();
       },
     );
   }
@@ -163,6 +166,19 @@ class loginState extends State<login_screen> {
   void googleSignOut() {
     _googleSignIn.signOut();
     setState(() {});
+  }
+
+  void facebookLogin() {
+
+    var fbModel;
+    List<User_Data> lsData = new List<User_Data>();
+    initiateFacebookLogin().then((onValue){
+      fbModel = User_Data.fromFB(onValue);
+      lsData.add(fbModel);
+      setState(() {
+        // print(lsData[0].name);
+      });
+    });
   }
 
   Future<void> facebookSignOut() async {
