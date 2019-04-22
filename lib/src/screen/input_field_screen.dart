@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import './home_screen.dart';
 import '../model/model.dart';
+import '../mixin/validator_mixin.dart';
 
 class fill_field extends StatefulWidget{
   @override
@@ -11,7 +12,7 @@ class fill_field extends StatefulWidget{
   }
 }
 
-class fieldState extends State<fill_field>{
+class fieldState extends State<fill_field> with ValidatorMixin{
 
   String useremail = "condaveat@gmail.com";
   String userpasword = "1234";
@@ -30,6 +31,7 @@ class fieldState extends State<fill_field>{
 
   Widget build(BuildContext context) {
     return Scaffold(
+      
       resizeToAvoidBottomPadding: true,
       body: new Container(
         child: new SingleChildScrollView(
@@ -115,11 +117,7 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             keyboardType: TextInputType.emailAddress,
             controller: email,
-            validator: (value) {
-              if ( value == '') return 'Fill email';
-              else if (!value.contains('@')) return 'Invalid email';
-              else return null;
-            },
+            validator: validatorEmail,
             decoration: new InputDecoration(
               labelText: 'Email',
             ),
@@ -127,11 +125,7 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             controller: password,
             obscureText: true,
-            validator: (value) {
-              if( value == '') {return 'Fill password';}
-              else if ( value.length < 5)return 'Password must be 5digit';
-              else return null;
-            },
+            validator: validatorPassword,
             decoration: new InputDecoration(
               labelText: 'Password'
             ),
@@ -162,11 +156,7 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             controller: email,
             keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if ( value == ''){ return 'Fill your email';}
-              else if (!value.contains('@')) {return 'Invalid email';}
-              else return null;
-            },
+            validator: validatorEmail,
             decoration: new InputDecoration(
               labelText: 'Email'
             ),
@@ -174,11 +164,7 @@ class fieldState extends State<fill_field>{
           new TextFormField(
             controller: password,
             obscureText: true,
-            validator: (value) {
-              if( value == '') {return 'Fill your password';}
-              else if ( value.length < 4) { return 'Password must be 4digit';}
-              else return null;
-            },
+            validator: validatorPassword,
             decoration: new InputDecoration(
               labelText: 'Password'
             ),
@@ -214,10 +200,10 @@ class fieldState extends State<fill_field>{
       child: Text('Log In'),
       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       onPressed: () {
-        if ( email.text == useremail && password.text == userpasword) {
+        // if ( email.text == useremail && password.text == userpasword) {
           Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
-          print('Success');
-        } else print('Not yet');
+        //   print('Success');
+        // } else print('Not yet');
         formkey.currentState.validate();
       },
     );
@@ -226,7 +212,7 @@ class fieldState extends State<fill_field>{
   Widget haveAccount() {
     return FlatButton(
       textColor: Colors.lightBlue[300],
-      child: Text('${showLogin == false ? 'Sign Up Now' : 'Already have account'}'),
+      child: Text('${showLogin == false ? "DON'T HAVE AN ACCOUNT" : 'Already have account'}'),
       onPressed: () {
         setState(() {
           if ( showLogin == false ) showLogin = true;

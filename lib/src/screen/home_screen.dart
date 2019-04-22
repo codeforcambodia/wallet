@@ -51,7 +51,9 @@ class homeState extends State<home_screen>{
                       Text('Home')
                     ],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
                 new ListTile(
                   leading: Row(
@@ -62,7 +64,10 @@ class homeState extends State<home_screen>{
                       Text('Profile')
                     ],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => profile_screen()));
+                    Navigator.pop(context);
+                  },
                 )
               ],
             ),

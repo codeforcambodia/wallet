@@ -34,18 +34,17 @@ class loginState extends State<login_screen> {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {
-        user_data = User_Data.fromGoogle(account.displayName, account.email, account.id,
-            account.photoUrl, "");
-        print(user_data);
+        // user_data = User_Data.fromGoogle(account.displayName, account.email, account.id,
+        //   account.photoUrl, "");
+        // print(user_data);
       });
     });
     print('Hello startup');
   }
 
-  Future<List<User_Data>>initiateFacebookLogin() async {
+  Future initiateFacebookLogin() async {
 
     FacebookLogin facebookLogin = new FacebookLogin();
-    List<User_Data> user = [];
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     final result = await facebookLogin.logInWithReadPermissions(['email']);
     final token = result.accessToken.token;
@@ -68,9 +67,7 @@ class loginState extends State<login_screen> {
         break;
     }
     final convert = jsonDecode(graphResponse.body);
-    user.add(convert);
-    print(user.length);
-    return convert;
+    return User_Data.fromFB(convert);
   }
 
   Widget build(BuildContext context) {
@@ -79,9 +76,9 @@ class loginState extends State<login_screen> {
         children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
-                image: new DecorationImage(
-              image: new AssetImage('assets/blur.jpg'),
-              fit: BoxFit.cover,
+              image: new DecorationImage(
+                image: new AssetImage('assets/blur.jpg'),
+                fit: BoxFit.cover,
             )),
             child: BackdropFilter(
               filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
@@ -169,15 +166,8 @@ class loginState extends State<login_screen> {
   }
 
   void facebookLogin() {
-
-    var fbModel;
-    List<User_Data> lsData = new List<User_Data>();
     initiateFacebookLogin().then((onValue){
-      fbModel = User_Data.fromFB(onValue);
-      lsData.add(fbModel);
-      setState(() {
-        // print(lsData[0].name);
-      });
+      print(onValue.id);
     });
   }
 
