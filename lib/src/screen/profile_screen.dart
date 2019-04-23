@@ -12,7 +12,12 @@ class profile_state extends State<profile_screen>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Hello page 2!'),
+        child: new RaisedButton(
+          child: Text('Sign out'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
     );
   }

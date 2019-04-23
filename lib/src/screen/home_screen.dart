@@ -96,7 +96,7 @@ class homeState extends State<home_screen>{
           body: TabBarView(
             children: <Widget>[
               Center(
-                // child: Text("${widget.data != null ?  'Hello '+widget.data.firstName : 'Page 1'}"),
+                child: signOutButton(),
               ),
               profile_screen()
             ],
@@ -134,14 +134,16 @@ class homeState extends State<home_screen>{
     return RaisedButton(
       child: Text('Sign Out'),
       onPressed: () {
+        Navigator.of(context).pop();
         setState(() {
-          progess = true;
-          Timer(
-            Duration(seconds: 3),
-            () => Navigator.of(context).pop()
-          );
+          // progess = true;
+          // Timer(
+          //   Duration(seconds: 3),
+          //   () => Navigator.of(context).pop()
+          // );
         });
       },
     );
   }
+
 }
