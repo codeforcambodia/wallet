@@ -1,12 +1,18 @@
+import 'package:google_sign_in/google_sign_in.dart';
+
 class User_Data {
-  final String id;
-  // final String displayName;
-  // final String email;
-  // final String photoUrl;
-  // final String password;
-  final String name;
-  final String firstName;
-  final String lastName;
+  //Facebook
+  String id;
+  String name;
+  String firstName;
+  String lastName;
+
+  // String password;
+  
+  //Google
+  String displayName;
+  String email;
+  String photoUrl;
 
   // User_Data.fromGoogle(String displayName, String email, String id, String photoUrl, String password) : 
   //   this.displayName = displayName,
@@ -18,7 +24,12 @@ class User_Data {
   User_Data.fromFB(Map<String, dynamic> parsedJson) :
     id = parsedJson['id'],
     name = parsedJson['name'],
-    firstName = parsedJson['parsedJson'],
-    lastName = parsedJson['pasredJson'];
+    firstName = parsedJson['first_name'],
+    lastName = parsedJson['last_name'];
+
+  User_Data.fromGoogle(GoogleSignInAccount googleData) :
+    displayName = googleData.displayName,
+    email = googleData.email,
+    photoUrl = googleData.photoUrl;
 
 }

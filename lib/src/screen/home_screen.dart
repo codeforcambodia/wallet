@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import './profile_screen.dart';
+import '../model/model.dart';
 
 class home_screen extends StatefulWidget{
+
+  // final User_Data data;
+  var dataFromFB;
+  var dataFromGG;
+
+  home_screen.fromFacebook({Key key, this.dataFromFB}) : super(key:key);
+  home_screen.fromGoogle({Key key, this.dataFromGG}) {
+    print(dataFromFB);
+  }
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -14,6 +25,16 @@ class homeState extends State<home_screen>{
 
   TabController _tabController;
   bool progess = false;
+
+  Widget _status(dataFb, dataGG) {
+    if ( dataFb != null ) {
+      return Text('Facebook ${dataFb.name}');
+    } else if (dataGG != null){
+      return Text('Google ${dataGG.displayName}');
+    } else {
+      return Text('Null');
+    }
+  }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,7 +58,7 @@ class homeState extends State<home_screen>{
                         backgroundImage: AssetImage('assets/abstract_logo_vector.png'),
                       ),
                       Container(margin: EdgeInsets.only(bottom: 5.0),),
-                      Text('Daveat Corn'),
+                      _status(widget.dataFromFB, widget.dataFromGG)
                     ],
                   ),
                 ),
@@ -75,7 +96,7 @@ class homeState extends State<home_screen>{
           body: TabBarView(
             children: <Widget>[
               Center(
-                child: Text('Hello page 1'),
+                // child: Text("${widget.data != null ?  'Hello '+widget.data.firstName : 'Page 1'}"),
               ),
               profile_screen()
             ],

@@ -32,17 +32,14 @@ class loginState extends State<login_screen> {
   @override
   void initState() {
     super.initState();
-    _googleSignIn.onCurrentUserChanged.listen((account) {
-      setState(() {
-        // user_data = User_Data.fromGoogle(account.displayName, account.email, account.id,
-        //   account.photoUrl, "");
-        // print(user_data);
-      });
-    });
+    googleData();
     print('Hello startup');
   }
+  
+  Future<GoogleSignInAccount> googleData() async{
+  }
 
-  Future initiateFacebookLogin() async {
+  Future initializeFacebookLogin() async {
 
     FacebookLogin facebookLogin = new FacebookLogin();
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
@@ -119,7 +116,9 @@ class loginState extends State<login_screen> {
     if (user_data == null) {
       return GoogleSignInButton(
         darkMode: true,
-        onPressed: () => googleSignUp(),
+        onPressed: () {
+          googleSignUp();
+        },
       );
     } else {
       return IconButton(
@@ -156,8 +155,11 @@ class loginState extends State<login_screen> {
   }
 
   void googleSignUp() {
-    print("Hello world");
     _googleSignIn.signIn();
+
+    _googleSignIn.onCurrentUserChanged.listen((account) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account)));
+    });
   }
 
   void googleSignOut() {
@@ -166,8 +168,8 @@ class loginState extends State<login_screen> {
   }
 
   void facebookLogin() {
-    initiateFacebookLogin().then((onValue){
-      print(onValue.id);
+    initializeFacebookLogin().then((onValue){
+      if ( onValue != null) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromFacebook(dataFromFB: onValue )));
     });
   }
 
