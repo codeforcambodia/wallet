@@ -16,7 +16,6 @@ GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'https://www.googleapis.com/auth/contacts.readonly'
 ]);
 
-
 var getStatus;
 
 class login_screen extends StatefulWidget {
@@ -156,9 +155,8 @@ class loginState extends State<login_screen> {
 
   void googleSignUp() {
     _googleSignIn.signIn();
-
     _googleSignIn.onCurrentUserChanged.listen((account) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account, google: _googleSignIn,)));
     });
   }
 
@@ -169,12 +167,10 @@ class loginState extends State<login_screen> {
 
   void facebookLogin() {
     initializeFacebookLogin().then((onValue){
-      if ( onValue != null) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromFacebook(dataFromFB: onValue )));
+      if ( onValue != null) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromFacebook(dataFromFB: onValue)));
     });
   }
 
   Future<void> facebookSignOut() async {
-    var channel = MethodChannel('com.roughike/flutter_facebook_login');
-    channel.invokeMethod('logOut');
   }
 }

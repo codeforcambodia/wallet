@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import './profile_screen.dart';
 import '../model/model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class home_screen extends StatefulWidget{
 
@@ -9,10 +11,11 @@ class home_screen extends StatefulWidget{
   var dataFromFB;
   var dataFromGG;
 
+  GoogleSignIn google;
+
   home_screen.fromFacebook({Key key, this.dataFromFB}) : super(key:key);
-  home_screen.fromGoogle({Key key, this.dataFromGG}) {
-    print(dataFromFB);
-  }
+  home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) : super(key:key);
+  home_screen();
 
   @override
   State<StatefulWidget> createState() {
@@ -46,16 +49,16 @@ class homeState extends State<home_screen>{
         child: Scaffold(
           key: _scaffoldKey,
           drawer: new Drawer(
-            child: ListView(
+            child: new ListView(
               children: <Widget>[
                 //Header of drawer
-                DrawerHeader(
+                new DrawerHeader(
                   child: Column(
                     children: <Widget>[
                       new CircleAvatar(
                         minRadius: 50.0,
                         maxRadius: 50.0,
-                        backgroundImage: AssetImage('assets/abstract_logo_vector.png'),
+                        backgroundImage: widget.dataFromGG != null ? NetworkImage(widget.dataFromGG.photoUrl) : AssetImage('assets/avatar.png'),
                       ),
                       Container(margin: EdgeInsets.only(bottom: 5.0),),
                       _status(widget.dataFromFB, widget.dataFromGG)
@@ -96,10 +99,17 @@ class homeState extends State<home_screen>{
           body: TabBarView(
             children: <Widget>[
               Center(
-                child: signOutButton(),
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Hello page 1'),
+                    signOutButton()
+                  ],
+                ),
               ),
-              profile_screen()
+              profile_screen(),
             ],
+            
           ),
           bottomNavigationBar: TabBar(
             tabs: <Widget>[
@@ -134,6 +144,12 @@ class homeState extends State<home_screen>{
     return RaisedButton(
       child: Text('Sign Out'),
       onPressed: () {
+        if ( widget.dataFromFB != null) {
+          print('facebook login');
+          FacebookLogin.channel.invokeMethod('logOut');
+        } else {
+          widget.google.signOut();
+        }
         Navigator.of(context).pop();
         setState(() {
           // progess = true;
@@ -145,5 +161,7 @@ class homeState extends State<home_screen>{
       },
     );
   }
+
+
 
 }
