@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../model/model.dart';
@@ -10,13 +9,13 @@ import './input_field_screen.dart';
 import 'dart:ui';
 import './home_screen.dart';
 import 'dart:convert';
+import 'package:linkedin_login/linkedin_login.dart';
+import 'package:uuid/uuid.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
   'https://www.googleapis.com/auth/contacts.readonly'
 ]);
-
-var getStatus;
 
 class login_screen extends StatefulWidget {
   @override
@@ -26,45 +25,11 @@ class login_screen extends StatefulWidget {
 }
 
 class loginState extends State<login_screen> {
-  var user_data;
-
-  @override
-  void initState() {
-    super.initState();
-    googleData();
-    print('Hello startup');
-  }
+  GoogleSignInAccount user_data;
   
-  Future<GoogleSignInAccount> googleData() async{
-  }
-
-  Future initializeFacebookLogin() async {
-
-    FacebookLogin facebookLogin = new FacebookLogin();
-    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
-    final result = await facebookLogin.logInWithReadPermissions(['email']);
-    final token = result.accessToken.token;
-    final graphResponse = await http.get(
-        'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
-    switch (result.status) {
-      
-      case FacebookLoginStatus.error:
-        print("Error");
-        // onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print("CancelledByUser");
-
-        // onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.loggedIn:
-        print("LoggedIn");
-        // onLoginStatusChanged(true);
-        break;
-    }
-    final convert = jsonDecode(graphResponse.body);
-    return User_Data.fromFB(convert);
-  }
+  final String redirectUrl = "https://testnet.zeetomic.com";
+  final String clientId = '81l6052tuwhceq';
+  final String clientSecret = 'P8T0FNCQJfQ3ArLq';
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,15 +58,17 @@ class loginState extends State<login_screen> {
                     width: 300.0,
                     height: 200.0,
                   ),
-                  new Row(
+                  new Row(  
                     children: <Widget>[Text('')],
                   ),
                   new Row(
                     children: <Widget>[Text('')],
                   ),
                   createNewAcc(context),
+                  Container(margin: EdgeInsets.only(bottom: 5),),
+                  linkedInButton(),
+                  Container(margin: EdgeInsets.only(bottom: 5),),
                   googleButton(),
-                  facebookButton(),
                 ],
               ),
             ),
@@ -130,10 +97,16 @@ class loginState extends State<login_screen> {
     }
   }
 
-  Widget facebookButton() {
-    return FacebookSignInButton(
-      onPressed: () {
-        facebookLogin();
+  Widget linkedInButton() {
+    return LinkedInButtonStandardWidget(
+      onTap: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => linkedInLogin(),
+            // fullscreenDialog: true
+          )
+        );
       },
     );
   }
@@ -145,7 +118,7 @@ class loginState extends State<login_screen> {
   Widget createNewAcc(context) {
     return RaisedButton(
       color: Colors.white,
-      child: Text('Login with account'),
+      child: Text('Login & Register'),
       onPressed: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => fill_field()));
@@ -154,9 +127,9 @@ class loginState extends State<login_screen> {
   }
 
   void googleSignUp() {
-    _googleSignIn.signIn();
+    _googleSignIn.signIn(); 
     _googleSignIn.onCurrentUserChanged.listen((account) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account, google: _googleSignIn,)));
+      if ( account != null ) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account, google: _googleSignIn,)));
     });
   }
 
@@ -165,12 +138,15 @@ class loginState extends State<login_screen> {
     setState(() {});
   }
 
-  void facebookLogin() {
-    initializeFacebookLogin().then((onValue){
-      if ( onValue != null) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromFacebook(dataFromFB: onValue)));
-    });
+  Widget linkedInLogin() {
+    return LinkedInUserWidget(
+      redirectUrl: redirectUrl,
+      clientId: clientId,
+      clientSecret: clientSecret,
+      onGetUserProfile: (LinkedInUserModel linkedInUser) {
+        // print(linkedInUser);
+      },
+    );
   }
 
-  Future<void> facebookSignOut() async {
-  }
 }

@@ -1,18 +1,26 @@
 import 'package:google_sign_in/google_sign_in.dart';
 
 class User_Data {
+
+  //Global
+  String firstName;
+  String lastName;
+  String email;
+
   //Facebook
   String id;
   String name;
-  String firstName;
-  String lastName;
 
   // String password;
   
   //Google
   String displayName;
-  String email;
   String photoUrl;
+
+  //LinkedIn
+  String accessToken;
+  int expiresIn;
+  String profilePicture;
 
   // User_Data.fromGoogle(String displayName, String email, String id, String photoUrl, String password) : 
   //   this.displayName = displayName,

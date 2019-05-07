@@ -19,6 +19,7 @@ class fieldState extends State<fill_field> with ValidatorMixin{
 
   bool showLogin = false;
   bool isProgress = false;
+
   final formkey = GlobalKey<FormState>();
 
   //get user data sign up
@@ -31,28 +32,27 @@ class fieldState extends State<fill_field> with ValidatorMixin{
 
   Widget build(BuildContext context) {
     return Scaffold(
-      
       resizeToAvoidBottomPadding: true,
       body: new Container(
         child: new SingleChildScrollView(
           child: Column(
             children: <Widget>[
               new Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage('assets/blur.jpg'),
-                fit: BoxFit.cover,
-              )
-            ),
-            child: BackdropFilter(
-              filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2)
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/blur.jpg'),
+                    fit: BoxFit.cover,
+                  )
+                ),
+                child: BackdropFilter(
+                  filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2)
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
               new AppBar(
                 backgroundColor: Colors.transparent,
                 elevation:  0.0,
@@ -74,7 +74,8 @@ class fieldState extends State<fill_field> with ValidatorMixin{
                           new Row(children: <Widget>[Text('')],),
                           //Button
                           loginBUtton(),
-                          haveAccount()  
+                          haveAccount(),
+                          forgotPassword()
                         ],
                       ) : Column(
                         children: <Widget>[
@@ -82,7 +83,7 @@ class fieldState extends State<fill_field> with ValidatorMixin{
                           new Row(children: <Widget>[Text('')],),
                           //Button
                           signUpButton(),
-                          haveAccount()
+                          haveAccount(),
                         ],
                       )
                     ],
@@ -132,7 +133,6 @@ class fieldState extends State<fill_field> with ValidatorMixin{
           ),
           new TextFormField(
             validator: (value) {
-
               if( value == '') {return 'Fill password';}
               else if ( value.length < 4)return 'Password must be 5digit';
               else if ( value != password.toString() )return 'Invalid password';
@@ -201,10 +201,10 @@ class fieldState extends State<fill_field> with ValidatorMixin{
       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       onPressed: () {
         // if ( email.text == useremail && password.text == userpasword) {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => home_screen()));
         //   print('Success');
         // } else print('Not yet');
-        formkey.currentState.validate();
+        // formkey.currentState.validate();
       },
     );
   }
@@ -219,6 +219,14 @@ class fieldState extends State<fill_field> with ValidatorMixin{
           else showLogin = false;
         });
       },
+    );
+  }
+
+  Widget forgotPassword() {
+    return FlatButton(
+      textColor: Colors.grey,
+      child: Text('Forgot password?'),
+      onPressed: () {},
     );
   }
 }

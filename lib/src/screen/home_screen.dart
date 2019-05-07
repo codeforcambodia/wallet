@@ -3,18 +3,21 @@ import 'dart:async';
 import './profile_screen.dart';
 import '../model/model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:linkedin_login/linkedin_login.dart';
+import  './login_screen.dart';
 
 class home_screen extends StatefulWidget{
 
   // final User_Data data;
-  var dataFromFB;
-  var dataFromGG;
-
+  GoogleSignInAccount dataFromGG;
   GoogleSignIn google;
+  LinkedInUserModel userModel;
 
-  home_screen.fromFacebook({Key key, this.dataFromFB}) : super(key:key);
   home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) : super(key:key);
+  home_screen.fromLinkedIn({Key key, this.userModel}){
+    print('Home Screen ${userModel.firstName.localized.label}');
+  }
+
   home_screen();
 
   @override
@@ -29,111 +32,91 @@ class homeState extends State<home_screen>{
   TabController _tabController;
   bool progess = false;
 
-  Widget _status(dataFb, dataGG) {
-    if ( dataFb != null ) {
-      return Text('Facebook ${dataFb.name}');
-    } else if (dataGG != null){
-      return Text('Google ${dataGG.displayName}');
-    } else {
-      return Text('Null');
-    }
-  }
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Theme(
-        data: ThemeData(brightness: Brightness.dark),
-        child: Scaffold(
-          key: _scaffoldKey,
-          drawer: new Drawer(
-            child: new ListView(
-              children: <Widget>[
-                //Header of drawer
-                new DrawerHeader(
-                  child: Column(
-                    children: <Widget>[
-                      new CircleAvatar(
-                        minRadius: 50.0,
-                        maxRadius: 50.0,
-                        backgroundImage: widget.dataFromGG != null ? NetworkImage(widget.dataFromGG.photoUrl) : AssetImage('assets/avatar.png'),
-                      ),
-                      Container(margin: EdgeInsets.only(bottom: 5.0),),
-                      _status(widget.dataFromFB, widget.dataFromGG)
-                    ],
-                  ),
-                ),
-                //Body of drawer
-                new ListTile(
-                  leading: Row(
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(left: 10.0),),
-                      Icon(Icons.home),
-                      Container(margin: EdgeInsets.only(right: 10.0),),
-                      Text('Home')
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                new ListTile(
-                  leading: Row(
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(left: 10.0),),
-                      Icon(Icons.account_circle),
-                      Container(margin: EdgeInsets.only(right: 10.0),),
-                      Text('Profile')
-                    ],
-                  ),
-                  onTap: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => profile_screen()));
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-          ),
-          body: TabBarView(
+  Widget build(BuildContext context) {  
+    return new Theme(
+      data: new ThemeData(brightness: Brightness.dark),
+      child: new Scaffold(
+        key: _scaffoldKey,
+        appBar: new AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            new IconButton(
+              iconSize: 35.0,
+              icon: Icon(Icons.account_circle),
+              onPressed: () {
+                _scaffoldKey.currentState.openDrawer();
+              },
+            )
+          ],
+        ),
+        drawer: new Drawer(
+          child: new Column(
             children: <Widget>[
-              Center(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+
+              //Expand listview
+              new Expanded(
+                child: new ListView(
                   children: <Widget>[
-                    Text('Hello page 1'),
-                    signOutButton()
+                    //Header of drawer
+                    new DrawerHeader(
+                      child: Column(
+                        children: <Widget>[
+                          new CircleAvatar(
+                            minRadius: 50.0,
+                            maxRadius: 50.0,
+                            backgroundImage: widget.dataFromGG != null ? NetworkImage(widget.dataFromGG.photoUrl) : AssetImage('assets/avatar.png'),
+                            // backgroundImage: widget.dataFromGG != null ? NetworkImage(widget.dataFromGG.photoUrl) : AssetImage('assets/avatar.png'),
+                          ),
+                          Container(margin: EdgeInsets.only(bottom: 5.0),),
+                          Text('${widget.dataFromGG != null ? widget.dataFromGG.displayName : ''}')
+                        ],
+                      ),
+                    ),
+                    //Body of drawer
+                    new ListTile(
+                      leading: Row(
+                        children: <Widget>[
+                          Container(margin: EdgeInsets.only(left: 10.0),),
+                          Icon(Icons.home),
+                          Container(margin: EdgeInsets.only(right: 10.0),),
+                          Text('Home')
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    new ListTile(
+                      leading: Row(
+                        children: <Widget>[
+                          Container(margin: EdgeInsets.only(left: 10.0),),
+                          Icon(Icons.account_circle),
+                          Container(margin: EdgeInsets.only(right: 10.0),),
+                          Text('Profile')
+                        ],
+                      ),
+                      onTap: () {
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => profile_screen()));
+                        Navigator.pop(context);
+                      },
+                    ),
                   ],
                 ),
               ),
-              profile_screen(),
-            ],
-            
-          ),
-          bottomNavigationBar: TabBar(
-            tabs: <Widget>[
-              Tab(
-                icon: Icon(
-                  Icons.home,
+              signOutButton(),
+
+              //Progressive
+              progess == true ? 
+              Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-                text: "Home",
-              ),
-              Tab(
-                icon: Icon(Icons.account_circle),
-                text: "Profile",
-              ),
-              Tab(
-                icon: Icon(Icons.menu),
-                text: "Menu",
-              ),
+              ) : Container()
             ],
-            onTap: (index) {
-              if ( index == 2) _scaffoldKey.currentState.openDrawer();
-            },
-            unselectedLabelColor: Color(0xff999999),
-            labelColor: Colors.white,
-            indicatorColor: Colors.transparent,
           ),
         ),
       ),
@@ -141,27 +124,30 @@ class homeState extends State<home_screen>{
   }
 
   Widget signOutButton() {
-    return RaisedButton(
-      child: Text('Sign Out'),
-      onPressed: () {
-        if ( widget.dataFromFB != null) {
-          print('facebook login');
-          FacebookLogin.channel.invokeMethod('logOut');
-        } else {
-          widget.google.signOut();
-        }
-        Navigator.of(context).pop();
-        setState(() {
-          // progess = true;
-          // Timer(
-          //   Duration(seconds: 3),
-          //   () => Navigator.of(context).pop()
-          // );
-        });
-      },
+    return new FlatButton(
+      color: Colors.red,
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.exit_to_app),
+          Container(margin: EdgeInsets.only(right: 10.0),),
+          Text('Sign out')
+        ],
+      ),
+      onPressed: _singOut
     );
   }
 
-
+  void _singOut(){
+    setState(() {
+      progess = true;
+    });
+    new Timer(Duration(seconds: 4), (){
+      setState(() {
+        progess = false;
+      });
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+    });
+  }
 
 }
