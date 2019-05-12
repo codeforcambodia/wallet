@@ -10,8 +10,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="google_sign_up"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Wallet"
+        android:icon="@mipmap/wallet">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

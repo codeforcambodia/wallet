@@ -7,10 +7,11 @@ import 'package:http/http.dart' as http;
 import '../model/model.dart';
 import './input_field_screen.dart';
 import 'dart:ui';
-import './home_screen.dart';
+import './homeScreen/home_screen.dart';
 import 'dart:convert';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:uuid/uuid.dart';
+import 'package:oauth2/oauth2.dart' as oauth2;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
@@ -144,9 +145,15 @@ class loginState extends State<login_screen> {
       clientId: clientId,
       clientSecret: clientSecret,
       onGetUserProfile: (LinkedInUserModel linkedInUser) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromLinkedIn(userModel: linkedInUser)));
         // print(linkedInUser);
       },
     );
   }
+
+  // void LinkedInAuth() async {
+  //   final authorizationEndpoint = Uri.parse('https://www.linkedin.com/oauth/v2/authorization');
+  //   final userName =
+  // }
 
 }

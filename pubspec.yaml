@@ -1,4 +1,4 @@
-name: google_sign_up
+name: Wallet_Apps
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -60,6 +60,7 @@ flutter:
     - assets/images.jpeg
     - assets/field_image.jpg
     - assets/avatar.png
+    - assets/island.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
