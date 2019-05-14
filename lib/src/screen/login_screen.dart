@@ -70,6 +70,7 @@ class loginState extends State<login_screen> {
                   linkedInButton(),
                   Container(margin: EdgeInsets.only(bottom: 5),),
                   googleButton(),
+                  Container(margin: EdgeInsets.only(bottom: 50.0),),
                 ],
               ),
             ),

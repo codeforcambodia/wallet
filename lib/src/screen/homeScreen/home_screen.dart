@@ -12,7 +12,9 @@ class home_screen extends StatefulWidget{
   GoogleSignIn google;
   LinkedInUserModel userModel;
 
-  home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) : super(key:key);
+  home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) {
+    print(dataFromGG);
+  }
   home_screen.fromLinkedIn({Key key, this.userModel}){
     print(userModel);
   }
@@ -141,51 +143,40 @@ class homeState extends State<home_screen>{
   Widget bodyWidget() {
     return ListView(
       children: <Widget>[
-
-        appbarWidget(),
-        
-        Container(
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(25.0),
-                    child: Text('It looks lonely in here!',style: TextStyle(fontSize: 25.0,color: Colors.white70),),
-                  ),
-                ],
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: Text('It looks lonely in here!',style: TextStyle(fontSize: 25.0,color: Colors.white70),),
+            ),
+            Image.asset('assets/island.png',width: 250.0,),
+            Container(margin: EdgeInsets.only(bottom: 20.0),),
+            SizedBox(
+              width: 200,
+              child: RaisedButton(
+                padding: EdgeInsets.all(10.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.add_circle),
+                    Container(margin: EdgeInsets.only(right: 15.0),),
+                    Text('Add a business', style: TextStyle(fontSize: 20.0),)
+                  ],
+                ),
+                onPressed: () {},
               ),
-              Image.asset('assets/island.png',width: 250.0,),
-              Row(children: <Widget>[Text('')],),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    padding: EdgeInsets.all(10.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.add_circle),
-                        Container(margin: EdgeInsets.only(right: 15.0),),
-                        Text('Add a business', style: TextStyle(fontSize: 20.0),)
-                      ],
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              )
-            ],
-          ),
+            )
+          ],
         )
       ]
     );
   }
 
   void _singOut(){
+    widget.google.signOut();
     setState(() {
       progess = true;
     });
@@ -202,6 +193,7 @@ class homeState extends State<home_screen>{
     return new Theme(
       data: new ThemeData(brightness: Brightness.dark),
       child: new Scaffold(
+        appBar: appbarWidget(),
         key: _scaffoldKey,
         drawer: drawerWidget(),
         body: bodyWidget(),
