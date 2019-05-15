@@ -14,7 +14,7 @@ class App extends StatelessWidget{
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Google sign up",
-      home: home_screen(),
+      home: login_screen(),
     );
   }
 }
