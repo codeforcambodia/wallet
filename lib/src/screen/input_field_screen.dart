@@ -171,6 +171,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return StreamBuilder(
       stream: bloc.submit,
       builder: (context, snapshot){
+        print(snapshot.data);
         return RaisedButton(
           padding: EdgeInsets.only(left: 60.0, right: 60.0),
           color: Colors.amber,

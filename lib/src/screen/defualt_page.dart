@@ -142,19 +142,13 @@ class loginState extends State<login_screen> {
 
   Widget linkedInLogin() {
     return LinkedInUserWidget(
+      onGetUserProfile: (LinkedInUserModel linkedInUser){
+        // print(linkedInUser);
+      },
       redirectUrl: redirectUrl,
       clientId: clientId,
       clientSecret: clientSecret,
-      onGetUserProfile: (LinkedInUserModel linkedInUser) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromLinkedIn(userModel: linkedInUser)));
-        // print(linkedInUser);
-      },
     );
   }
-
-  // void LinkedInAuth() async {
-  //   final authorizationEndpoint = Uri.parse('https://www.linkedin.com/oauth/v2/authorization');
-  //   final userName =
-  // }
 
 }
