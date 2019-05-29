@@ -107,6 +107,10 @@ class homeState extends State<home_screen>{
                     Navigator.pop(context);
                   },
                 ),
+                ListTile(
+                  leading: Text('Setting'),
+                  onTap: () {},
+                )
               ],
             ),
           ),
@@ -176,7 +180,7 @@ class homeState extends State<home_screen>{
   }
 
   void _singOut(){
-    widget.google.signOut();
+    if(widget.google != null) widget.google.signOut();
     setState(() {
       progess = true;
     });

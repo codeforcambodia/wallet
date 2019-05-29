@@ -179,7 +179,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           child: Text('Log In'),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           onPressed: !snapshot.hasData ? null : () {
-            
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
           },
         );
       },

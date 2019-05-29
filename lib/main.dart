@@ -16,7 +16,7 @@ class App extends StatelessWidget{
     return Provider(
       child: MaterialApp(
         title: "Google sign up",
-        home: login_screen(),
+        home: home_screen(),
       ),
     );
   }
