@@ -4,6 +4,7 @@ import '../profile_screen.dart';
 import '../../model/model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linkedin_login/linkedin_login.dart';
+import './body/border_row.dart';
 
 class home_screen extends StatefulWidget{
 
@@ -11,12 +12,17 @@ class home_screen extends StatefulWidget{
   GoogleSignInAccount dataFromGG;
   GoogleSignIn google;
   LinkedInUserModel userModel;
+  User_Data dataSignUp;
 
   home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) {
     print(dataFromGG);
   }
   home_screen.fromLinkedIn({Key key, this.userModel}){
     print(userModel);
+  }
+
+  home_screen.fromSignUp(this.dataSignUp){
+    print(dataSignUp.firstName);
   }
 
   home_screen();
@@ -34,6 +40,7 @@ class homeState extends State<home_screen>{
   bool progess = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final border = CardUser();
 
   //WIdget function
   
@@ -108,14 +115,22 @@ class homeState extends State<home_screen>{
                   },
                 ),
                 ListTile(
-                  leading: Text('Setting'),
+                  contentPadding: EdgeInsets.only(left: 20.0),
+                  leading: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(Icons.settings),
+                      Container(margin: EdgeInsets.only(right: 10.0),),
+                      Text('Setting')
+                    ],
+                  ),
                   onTap: () {},
                 )
               ],
             ),
           ),
           signOutButton(),
-
+          
           //Progressive
           progess == true ? 
           Container(
@@ -147,34 +162,40 @@ class homeState extends State<home_screen>{
   Widget bodyWidget() {
     return ListView(
       children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(25.0),
-              child: Text('It looks lonely in here!',style: TextStyle(fontSize: 25.0,color: Colors.white70),),
-            ),
-            Image.asset('assets/island.png',width: 250.0,),
-            Container(margin: EdgeInsets.only(bottom: 20.0),),
-            SizedBox(
-              width: 200,
-              child: RaisedButton(
-                padding: EdgeInsets.all(10.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.add_circle),
-                    Container(margin: EdgeInsets.only(right: 15.0),),
-                    Text('Add a business', style: TextStyle(fontSize: 20.0),)
-                  ],
-                ),
-                onPressed: () {},
-              ),
-            )
-          ],
-        )
+      Container(margin: EdgeInsets.only(bottom: 20.0),),
+        appbarWidget(),
+        border.borderRow(widget.dataSignUp)
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+        //     Padding(
+        //       padding: EdgeInsets.all(25.0),
+        //       child: Text('It looks lonely in here!',style: TextStyle(fontSize: 25.0,color: Colors.white70),),
+        //     ),
+        //     Image.asset('assets/island.png',width: 250.0,),
+        //     Container(margin: EdgeInsets.only(bottom: 20.0),),
+        //     SizedBox(
+        //       width: 230,
+        //       child: RaisedButton(
+        //         color: Colors.white,
+        //         textColor: Colors.black,
+        //         padding: EdgeInsets.only(top: 15.0, bottom: 15.0, right: 20.0, left: 20.0),
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(20.0)
+        //         ),
+        //         child: Row(
+        //           children: <Widget>[
+        //             Icon(Icons.add_circle),
+        //             Container(margin: EdgeInsets.only(right: 5.0),),
+        //             Text('Add a business', style: TextStyle(fontSize: 20.0),)
+        //           ],
+        //         ),
+        //         onPressed: () {},
+        //       ),
+        //     )
+        //   ],
+        // )
       ]
     );
   }
@@ -197,7 +218,6 @@ class homeState extends State<home_screen>{
     return new Theme(
       data: new ThemeData(brightness: Brightness.dark),
       child: new Scaffold(
-        appBar: appbarWidget(),
         key: _scaffoldKey,
         drawer: drawerWidget(),
         body: bodyWidget(),

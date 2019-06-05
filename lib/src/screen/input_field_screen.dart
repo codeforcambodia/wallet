@@ -7,6 +7,9 @@ import '../screen/forgot_password/forgot_password.dart';
 import '../bloc/bloc.dart';
 import 'dart:async';
 import '../provider/provider.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import '../provider/Data_Store/data_store.dart';
+
 
 class fill_field extends StatefulWidget {
   @override
@@ -35,8 +38,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   final FocusNode passwordNode = FocusNode();
   final FocusNode conFirmPasswordNode = FocusNode();
 
-  //get user data sign up
-  String fullname, email, password, confirm_password;
+  QueryResult queryResult = QueryResult();
 
   @override
   void initState(){
@@ -50,7 +52,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: bodyWidget(bloc),
-    );
+    );   
   }
   
   //body widget
@@ -109,7 +111,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             loginButton(bloc),
-            signUpAndHaveAccount(),
+            switchForm(),
           ],
         ),
         youForgotPassword()
@@ -171,16 +173,23 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return StreamBuilder(
       stream: bloc.submit,
       builder: (context, snapshot){
-        print(snapshot.data);
         return RaisedButton(
           padding: EdgeInsets.only(left: 60.0, right: 60.0),
           color: Colors.amber,
           textColor: Colors.white,
           child: Text('Log In'),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          onPressed: !snapshot.hasData ? null : () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
-          },
+          onPressed: 
+          () {
+            bloc.submitMethod().then((data){
+              if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+            });
+            // if ( == true) {
+            //   print ('Hello ');
+            // }
+            // print(validate);
+          }
+          ,
         );
       },
     );
@@ -190,7 +199,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   Widget user_signup(Bloc bloc) {
     return Column(
       children: <Widget>[
-        username(bloc),
+        // username(bloc),
         Row(children: <Widget>[Text('')],),
         TextFormField(
           textInputAction: TextInputAction.next,
@@ -199,9 +208,6 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           onFieldSubmitted: (term) {
             emailNode.unfocus();
             FocusScope.of(context).requestFocus(passwordNode);
-          },
-          onSaved: (value) {
-            email = value; 
           },
           decoration: InputDecoration(
               labelText: 'Email',
@@ -217,9 +223,6 @@ class fieldState extends State<fill_field> with ValidatorMixin {
             passwordNode.unfocus();
             FocusScope.of(context).requestFocus(conFirmPasswordNode);
           },
-          onSaved: (value) {
-            password = value;
-          },
           decoration: InputDecoration(
               labelText: 'Password',
               border: OutlineInputBorder(
@@ -232,17 +235,14 @@ class fieldState extends State<fill_field> with ValidatorMixin {
               return 'Fill password';
             } else if (value.length < 4)
               return 'Password must be 5digit';
-            else if (value != password.toString())
-              return 'Invalid password';
-            else
+            // else if (value != password.toString())
+            //   return 'Invalid password';
+            // else
               return null;
           },
           obscureText: true,
           focusNode: conFirmPasswordNode,
           textInputAction: TextInputAction.done,
-          onSaved: (value) {
-            confirm_password = value;
-          },
           decoration: InputDecoration(
             labelText: 'Comfirm password',
             border: OutlineInputBorder(
@@ -253,7 +253,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
         Row(children: <Widget>[Text('')],),
         //Button
         signUpButton(),
-        signUpAndHaveAccount(),
+        switchForm(),
       ],
     );
   }
@@ -288,17 +288,27 @@ class fieldState extends State<fill_field> with ValidatorMixin {
       child: Text('Sign Un'),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       onPressed: () {
+         Map<String, dynamic> userdata = {
+          'firstName': 'Daveat',
+          'lastName': 'Corn',
+          'email': 'condaveat@gmail.com',
+          'password': '12345',
+          'confirm_pass': '12345',
+          'image': 'https://firebasestorage.googleapis.com/v0/b/flutter-236705.appspot.com/o/17499428_1876523952588037_4176834688564950044_n.jpg?alt=media&token=f335c859-e7ab-4670-9ae4-b2a3dcab92a6'
+        };
+
+        final model = User_Data.userSignUp(userdata);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromSignUp(model)));
       },
     );
   }
 
-  Widget signUpAndHaveAccount() {
+  Widget switchForm() {
     return FlatButton(
       textColor: Colors.lightBlue[300],
       child: Text('${showLogin == false ? "Sign up" : 'Already have account'}'),
       onPressed: () {
         setState(() {
-          // formkey.currentState.reset();
           if (showLogin == false)
             showLogin = true;
           else
