@@ -334,7 +334,9 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   Widget loading() {
     return ConstrainedBox(
       constraints: BoxConstraints.expand(),
-      child: Center(child: CircularProgressIndicator(),),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
+        CircularProgressIndicator()
+      ],)
     );
   }
 
