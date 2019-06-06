@@ -205,7 +205,7 @@ class homeState extends State<home_screen>{
     setState(() {
       progess = true;
     });
-    new Timer(Duration(seconds: 4), (){
+    new Timer(Duration(seconds: 2), (){
       setState(() {
         progess = false;
       });

@@ -20,9 +20,6 @@ class fill_field extends StatefulWidget {
 }
 
 class fieldState extends State<fill_field> with ValidatorMixin {
-  String useremail = "condaveat@gmail.com";
-  String userpassword = "1234";
-
   bool showLogin = false;
   bool isProgress = false;
 
@@ -57,45 +54,46 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   
   //body widget
   Widget bodyWidget(Bloc bloc) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/blur.jpg'),
-              fit: BoxFit.cover,
-            )),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-              ),
+    return Stack(
+      children: <Widget>[
+        // Background Image
+        Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/blur.jpg'),
+            fit: BoxFit.cover,
+          )),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
             ),
           ),
-          AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            iconTheme: IconThemeData(color: Colors.blueAccent),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 30.0, right: 30.0),
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  //Image logo
-                  Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
-                  Row(children: <Widget>[Text('')],),
-                  //Field input
-                  showLogin == false ? user_login(bloc) : user_signup(bloc), 
-                  Container( margin: EdgeInsets.only(bottom: 50.0), ),
-                ],
-              ),
+        ),
+        AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          iconTheme: IconThemeData(color: Colors.blueAccent),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 30.0, right: 30.0),
+          child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //Image logo
+                Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
+                Row(children: <Widget>[Text('')],),
+                //Field input
+                showLogin == false ? user_login(bloc) : user_signup(bloc),
+                // Container( margin: EdgeInsets.only(bottom: 50.0), ),
+              ],
             ),
           ),
-        ],
-      )),
+        ),
+        isProgress == true ? loading() : Row()
+      ],
     );
   }
 
@@ -114,7 +112,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
             switchForm(),
           ],
         ),
-        youForgotPassword()
+        forgotPassword()
       ],
     );
   }
@@ -181,9 +179,13 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           onPressed: 
           () {
-            bloc.submitMethod().then((data){
-              if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+            setState(() {
+              isProgress = true;
+              Timer(Duration(seconds: 3), ()=> setState(()=> isProgress = false));
             });
+            // bloc.submitMethod().then((data){
+            //   if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+            // });
             // if ( == true) {
             //   print ('Hello ');
             // }
@@ -305,7 +307,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
 
   Widget switchForm() {
     return FlatButton(
-      textColor: Colors.lightBlue[300],
+      textColor: Colors.cyanAccent[700],
       child: Text('${showLogin == false ? "Sign up" : 'Already have account'}'),
       onPressed: () {
         setState(() {
@@ -318,14 +320,21 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     );
   }
 
-  Widget youForgotPassword() {
+  Widget forgotPassword() {
     return FlatButton(
-      textColor: Colors.grey,
+      textColor: Colors.black,
       child: Text('Forgot password?'),
       onPressed: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => forgotPassword()));
       },
+    );
+  }
+
+  Widget loading() {
+    return ConstrainedBox(
+      constraints: BoxConstraints.expand(),
+      child: Center(child: CircularProgressIndicator(),),
     );
   }
 

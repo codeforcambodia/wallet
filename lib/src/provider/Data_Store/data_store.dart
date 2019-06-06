@@ -9,8 +9,13 @@ Future<bool> setData (Map<String, dynamic> data) async {
   return prefs.commit();
 }
 
-Future<Map<String, dynamic>> getData() async {
+Future<Map<String, dynamic>> fetchPersonalData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Map<String, dynamic> dataParse = jsonDecode(prefs.getString('dataSignUp'));
+  print(dataParse['personal'].length);
   return dataParse;
+}
+
+Future<Map<String, dynamic>> fetchBooksData() async {
+  
 }

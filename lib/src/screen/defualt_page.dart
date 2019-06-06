@@ -48,7 +48,9 @@ class loginState extends State<login_screen> {
       body: Query(
         options: QueryOptions(document: query),
         builder: (QueryResult result, {VoidCallback refetch}){
-          if ( result.data != null ) setData(result.data);
+          if ( result.data != null ) {
+            setData(result.data);
+          }
           return Stack(
             children: <Widget>[
               new Container(

@@ -23,11 +23,11 @@ class Bloc with ValidatorMixin{
   Function(String) get addUsername => _username.sink.add;
 
   Future<bool> submitMethod() async {
-    return getData().then((data) {
-      for ( int i = 0; i < data.length; i++){
+    return fetchPersonalData().then((data) {
+      for ( int i = 0; i < data['personal'].length; i++){
         if(data['personal'][i]['email'] == _email.value && data['personal'][i]['password'] == _password.value) return true;
-        else return false;
       }
+      return false;
     });
   }
 
