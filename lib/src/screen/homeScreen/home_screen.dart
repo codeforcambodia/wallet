@@ -42,7 +42,19 @@ class homeState extends State<home_screen>{
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final border = CardUser();
 
-  //WIdget function
+  //Widget Build
+  Widget build(BuildContext context) {  
+    return new Theme(
+      data: new ThemeData(brightness: Brightness.dark),
+      child: new Scaffold(
+        key: _scaffoldKey,
+        drawer: drawerWidget(),
+        body: bodyWidget(),
+      ),
+    );
+  }
+
+  //Widget function
   
   Widget appbarWidget() {
     return AppBar(
@@ -160,43 +172,43 @@ class homeState extends State<home_screen>{
 
   //body widget
   Widget bodyWidget() {
-    return ListView(
-      children: <Widget>[
-      Container(margin: EdgeInsets.only(bottom: 20.0),),
-        appbarWidget(),
-        border.borderRow(widget.dataSignUp)
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: <Widget>[
-        //     Padding(
-        //       padding: EdgeInsets.all(25.0),
-        //       child: Text('It looks lonely in here!',style: TextStyle(fontSize: 25.0,color: Colors.white70),),
-        //     ),
-        //     Image.asset('assets/island.png',width: 250.0,),
-        //     Container(margin: EdgeInsets.only(bottom: 20.0),),
-        //     SizedBox(
-        //       width: 230,
-        //       child: RaisedButton(
-        //         color: Colors.white,
-        //         textColor: Colors.black,
-        //         padding: EdgeInsets.only(top: 15.0, bottom: 15.0, right: 20.0, left: 20.0),
-        //         shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(20.0)
-        //         ),
-        //         child: Row(
-        //           children: <Widget>[
-        //             Icon(Icons.add_circle),
-        //             Container(margin: EdgeInsets.only(right: 5.0),),
-        //             Text('Add a business', style: TextStyle(fontSize: 20.0),)
-        //           ],
-        //         ),
-        //         onPressed: () {},
-        //       ),
-        //     )
-        //   ],
-        // )
-      ]
+    return Container(
+      color: Colors.red,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            height: 280.0,
+            padding: EdgeInsets.all(10.0),
+            color: Colors.black,
+            child: Stack(
+              children: <Widget>[
+                Image(height: double.infinity, width: double.infinity ,image: NetworkImage('https://www.w3schools.com/w3css/img_lights.jpg'),),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text("Daveat",style: TextStyle(fontSize: 25.0,)),
+                  ),
+                ),
+                appbarWidget()
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              color: Colors.blue,
+              child: ListView.builder(
+                itemCount: 20,
+                itemBuilder: (context, int index){
+                  return Card(child: RaisedButton(onPressed: (){},child: Text('Hello'),));
+                },
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 
@@ -213,15 +225,4 @@ class homeState extends State<home_screen>{
     });
   }
 
-  //Widget Build
-  Widget build(BuildContext context) {  
-    return new Theme(
-      data: new ThemeData(brightness: Brightness.dark),
-      child: new Scaffold(
-        key: _scaffoldKey,
-        drawer: drawerWidget(),
-        body: bodyWidget(),
-      ),
-    );
-  }
 }

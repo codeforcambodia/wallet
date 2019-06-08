@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:ui';
 import './homeScreen/home_screen.dart';
 import '../model/model.dart';
@@ -47,7 +48,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     Bloc bloc = Provider.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomPadding: false,
       body: bodyWidget(bloc),
     );   
   }
@@ -57,39 +58,37 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return Stack(
       children: <Widget>[
         // Background Image
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage('assets/blur.jpg'),
-            fit: BoxFit.cover,
-          )),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-            ),
-          ),
-        ),
+        // Container(
+        //   decoration: BoxDecoration(
+        //       image: DecorationImage(
+        //     image: AssetImage('assets/blur.jpg'),
+        //     fit: BoxFit.cover,
+        //   )),
+        //   child: BackdropFilter(
+        //     filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+        //     child: Container(
+        //       decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
+        //     ),
+        //   ),
+        // ),
         AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           iconTheme: IconThemeData(color: Colors.blueAccent),
         ),
         Container(
+          constraints: BoxConstraints.expand(),
           padding: EdgeInsets.only(left: 30.0, right: 30.0),
-          child: ConstrainedBox(
-            constraints: BoxConstraints.expand(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //Image logo
-                Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
-                Row(children: <Widget>[Text('')],),
-                //Field input
-                showLogin == false ? user_login(bloc) : user_signup(bloc),
-                // Container( margin: EdgeInsets.only(bottom: 50.0), ),
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              //Image logo
+              Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
+              Row(children: <Widget>[Text('')],),
+              //Field input
+              showLogin == false ? user_login(bloc) : user_signup(bloc),
+              // Container( margin: EdgeInsets.only(bottom: 50.0), ),
+            ],
           ),
         ),
         isProgress == true ? loading() : Row()
