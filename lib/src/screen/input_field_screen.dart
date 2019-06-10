@@ -180,15 +180,13 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           () {
             setState(() {
               isProgress = true;
-              Timer(Duration(seconds: 3), ()=> setState(()=> isProgress = false));
+              Timer(Duration(seconds: 3), (){
+                setState(()=> isProgress = false);
+                bloc.submitMethod().then((data){
+                  if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+                });
+              });
             });
-            // bloc.submitMethod().then((data){
-            //   if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
-            // });
-            // if ( == true) {
-            //   print ('Hello ');
-            // }
-            // print(validate);
           }
           ,
         );

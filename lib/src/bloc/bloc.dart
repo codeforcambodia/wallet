@@ -9,8 +9,7 @@ class Bloc with ValidatorMixin{
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
   final _username = BehaviorSubject<String>();
-
-  // User login
+  
   get emailStream => _email.stream.transform(validateEmail); 
   get passwordStream => _password.stream.transform(validatePassword);
   get submit => Observable.combineLatest2(emailStream, passwordStream, (email, password)=> true);

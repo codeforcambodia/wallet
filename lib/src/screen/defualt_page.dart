@@ -39,6 +39,7 @@ class loginState extends State<login_screen> {
         email
         password
         id
+        username
       }
     }
   """;
