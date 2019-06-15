@@ -58,6 +58,7 @@ flutter:
     - assets/abstract_logo_vector.png
     - assets/blur.jpg
     - assets/avatar.png
+    - assets/zeetomic-logo-header.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -9,8 +9,8 @@ import '../bloc/bloc.dart';
 import 'dart:async';
 import '../provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../provider/Data_Store/data_store.dart';
-
+import '../provider/Data_Store/data_storage.dart';
+import '../query_service/query_service.dart';
 
 class fill_field extends StatefulWidget {
   @override
@@ -21,8 +21,10 @@ class fill_field extends StatefulWidget {
 }
 
 class fieldState extends State<fill_field> with ValidatorMixin {
-  bool showLogin = false;
-  bool isProgress = false;
+
+  final String directory = "userID";
+
+  bool showLogin = false, isProgress = false;
 
   final formkey = GlobalKey<FormState>();
 
@@ -48,56 +50,66 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     Bloc bloc = Provider.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: bodyWidget(bloc),
+      resizeToAvoidBottomPadding: true,
+      body: Query(
+        options: QueryOptions(document: user_login_data),
+        builder: (QueryResult result, {VoidCallback refetch}){
+          if (result.data != null) {
+            isProgress = false;
+          }
+          return bodyWidget(bloc, result);
+        },
+      ),
     );   
   }
   
   //body widget
-  Widget bodyWidget(Bloc bloc) {
+  Widget bodyWidget(Bloc bloc, QueryResult result) {
     return Stack(
       children: <Widget>[
         // Background Image
-        // Container(
-        //   decoration: BoxDecoration(
-        //       image: DecorationImage(
-        //     image: AssetImage('assets/blur.jpg'),
-        //     fit: BoxFit.cover,
-        //   )),
-        //   child: BackdropFilter(
-        //     filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-        //     child: Container(
-        //       decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-        //     ),
-        //   ),
-        // ),
+        Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/blur.jpg'),
+            fit: BoxFit.cover,
+          )),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
+            ),
+          ),
+        ),
         AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           iconTheme: IconThemeData(color: Colors.blueAccent),
         ),
-        Container(
-          constraints: BoxConstraints.expand(),
-          padding: EdgeInsets.only(left: 30.0, right: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Image logo
-              Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
-              Row(children: <Widget>[Text('')],),
-              //Field input
-              showLogin == false ? user_login(bloc) : user_signup(bloc),
-              // Container( margin: EdgeInsets.only(bottom: 50.0), ),
-            ],
+        Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.all(30.0),
+              child: Column(
+                children: <Widget>[
+                  //Image logo
+                  Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
+                  Row(children: <Widget>[Text('')],),
+                  //Field input
+                  showLogin == false ? user_login(bloc, result) : user_signup(bloc),
+                  // Container( margin: EdgeInsets.only(bottom: 50.0), ),
+                ],
+              ),
+            ),
           ),
         ),
-        isProgress == true ? loading() : Row()
+        // isProgress == true ? loading() : Container()
       ],
     );
   }
 
   //Below is User Login
-  Widget user_login(Bloc bloc) {
+  Widget user_login(Bloc bloc, QueryResult result) {
     return Column(
       children: <Widget>[
         emailField(bloc),
@@ -107,7 +119,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            loginButton(bloc),
+            loginButton(bloc, result),
             switchForm(),
           ],
         ),
@@ -166,7 +178,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     );
   }
 
-  Widget loginButton(bloc) {
+  Widget loginButton(bloc, QueryResult result) {
     return StreamBuilder(
       stream: bloc.submit,
       builder: (context, snapshot){
@@ -178,17 +190,22 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           onPressed: 
           () {
-            setState(() {
-              isProgress = true;
-              Timer(Duration(seconds: 3), (){
-                setState(()=> isProgress = false);
-                bloc.submitMethod().then((data){
-                  if (data == true) Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+            if ( result.data == null ) {
+              setState(() {
+                isProgress = true;
+              });
+            } else {
+              final id = bloc.submitMethod(result);
+              setState(() {
+                setUserID(id, directory);
+                isProgress = true;
+                Timer(Duration(seconds: 2), (){
+                  setState(()=> isProgress = false);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
                 });
               });
-            });
-          }
-          ,
+            }
+          },
         );
       },
     );
@@ -201,6 +218,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
         // username(bloc),
         Row(children: <Widget>[Text('')],),
         TextFormField(
+          
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.emailAddress,
           focusNode: emailNode,
@@ -212,42 +230,6 @@ class fieldState extends State<fill_field> with ValidatorMixin {
               labelText: 'Email',
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0))),
-        ),
-        Row(children: <Widget>[Text('')],),
-        TextFormField(
-          textInputAction: TextInputAction.next,
-          obscureText: true,
-          focusNode: passwordNode,
-          onFieldSubmitted: (term) {
-            passwordNode.unfocus();
-            FocusScope.of(context).requestFocus(conFirmPasswordNode);
-          },
-          decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0))),
-        ),
-        Row(children: <Widget>[Text('')],),
-        TextFormField(
-          validator: (value) {
-            if (value == '') {
-              return 'Fill password';
-            } else if (value.length < 4)
-              return 'Password must be 5digit';
-            // else if (value != password.toString())
-            //   return 'Invalid password';
-            // else
-              return null;
-          },
-          obscureText: true,
-          focusNode: conFirmPasswordNode,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(
-            labelText: 'Comfirm password',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0)
-            )
-          ),
         ),
         Row(children: <Widget>[Text('')],),
         //Button
@@ -329,11 +311,8 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   }
 
   Widget loading() {
-    return ConstrainedBox(
-      constraints: BoxConstraints.expand(),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
-        CircularProgressIndicator()
-      ],)
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 

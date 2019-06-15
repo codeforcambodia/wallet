@@ -12,7 +12,10 @@ import 'dart:convert';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:uuid/uuid.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../provider/Data_Store/data_store.dart';
+import '../provider/Data_Store/data_storage.dart';
+import '../query_service/query_service.dart';
+import '../provider/provider.dart';
+import '../bloc/bloc.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
@@ -33,74 +36,53 @@ class loginState extends State<login_screen> {
   final String clientId = '81l6052tuwhceq';
   final String clientSecret = 'P8T0FNCQJfQ3ArLq';
 
-  final String query = """
-    query {
-      personal {
-        email
-        password
-        id
-        username
-      }
-    }
-  """;
-
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Query(
-        options: QueryOptions(document: query),
-        builder: (QueryResult result, {VoidCallback refetch}){
-          if ( result.data != null ) {
-            setData(result.data);
-          }
-          return Stack(
-            children: <Widget>[
-              new Container(
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage('assets/blur.jpg'),
-                    fit: BoxFit.cover,
-                )),
-                child: BackdropFilter(
-                  filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-                  ),
-                ),
+      body: Stack(
+        children: <Widget>[
+          new Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage('assets/blur.jpg'),
+                fit: BoxFit.cover,
+            )),
+            child: BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
               ),
-              Container(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new Image.asset(
-                        'assets/abstract_logo_vector.png',
-                        width: 300.0,
-                        height: 200.0,
-                      ),
-                      new Row(  
-                        children: <Widget>[Text('')],
-                      ),
-                      new Row(
-                        children: <Widget>[Text('')],
-                      ),
-                      createNewAcc(context),
-                      Container(margin: EdgeInsets.only(bottom: 5),),
-                      linkedInButton(),
-                      Container(margin: EdgeInsets.only(bottom: 5),),
-                      googleButton(),
-                      Container(margin: EdgeInsets.only(bottom: 50.0),),
-                    ],
+            ),
+          ),
+          Container(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset(
+                    'assets/abstract_logo_vector.png',
+                    width: 300.0,
+                    height: 200.0,
                   ),
-                ),
-              )
-            ],
-          );
-        },
+                  new Row(  
+                    children: <Widget>[Text('')],
+                  ),
+                  new Row(
+                    children: <Widget>[Text('')],
+                  ),
+                  createNewAcc(context),
+                  Container(margin: EdgeInsets.only(bottom: 5),),
+                  linkedInButton(),
+                  Container(margin: EdgeInsets.only(bottom: 5),),
+                  googleButton(),
+                  Container(margin: EdgeInsets.only(bottom: 50.0),),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
-
-  
 
   Widget googleButton() {
     if (user_data == null) {

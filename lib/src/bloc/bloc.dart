@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../mixin/validator_mixin.dart';
 import 'package:rxdart/rxdart.dart';
-import '../provider/Data_Store/data_store.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Bloc with ValidatorMixin{
 
@@ -21,13 +21,12 @@ class Bloc with ValidatorMixin{
   Function(String) get addPassword => _password.sink.add;
   Function(String) get addUsername => _username.sink.add;
 
-  Future<bool> submitMethod() async {
-    return fetchPersonalData().then((data) {
-      for ( int i = 0; i < data['personal'].length; i++){
-        if(data['personal'][i]['email'] == _email.value && data['personal'][i]['password'] == _password.value) return true;
-      }
-      return false;
-    });
+  String submitMethod(QueryResult result)  {
+    print(_email.value);
+    print(_password.value);
+    for ( int i = 0; i < result.data['user_login'].length; i++){
+      if(result.data['user_login'][i]['email'] == _email.value && result.data['user_login'][i]['password'] == _password.value) return result.data['user_login'][i]['id'];
+    }
   }
 
   dispose() {

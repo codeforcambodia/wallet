@@ -33,7 +33,7 @@ class App extends StatelessWidget{
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home: home_screen(),
+            home: login_screen(),
           )
         ),
       ),

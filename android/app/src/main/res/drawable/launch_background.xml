@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/splash2" />
+            android:src="@drawable/zeetomic"/>
             <!-- mipmap -->
     </item>
 </layer-list>
