@@ -1,26 +1,27 @@
+import 'package:Wallet_Apps/src/provider/hexaColorConvert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:ui';
-import './homeScreen/home_screen.dart';
-import '../model/model.dart';
-import '../mixin/validator_mixin.dart';
-import '../screen/forgot_password/forgot_password.dart';
-import '../bloc/bloc.dart';
 import 'dart:async';
-import '../provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../provider/Data_Store/data_storage.dart';
-import '../query_service/query_service.dart';
+import '../homeScreen/home_screen.dart';
+import '../../model/model.dart';
+import '../../mixin/validator_mixin.dart';
+import '../../bloc/bloc.dart';
+import '../../provider/provider.dart';
+import '../../provider/Data_Store/data_storage.dart';
+import '../../query_service/query_service.dart';
+import './background.dart';
 
-class fill_field extends StatefulWidget {
+class login_screen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return fieldState();
+    return loginState();
   }
 }
 
-class fieldState extends State<fill_field> with ValidatorMixin {
+class loginState extends State<login_screen> with ValidatorMixin {
 
   final String directory = "userID";
 
@@ -50,7 +51,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     Bloc bloc = Provider.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       body: Query(
         options: QueryOptions(document: user_login_data),
         builder: (QueryResult result, {VoidCallback refetch}){
@@ -68,23 +69,11 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return Stack(
       children: <Widget>[
         // Background Image
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage('assets/blur.jpg'),
-            fit: BoxFit.cover,
-          )),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-            ),
-          ),
-        ),
+        background(),
         AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          iconTheme: IconThemeData(color: Colors.blueAccent),
+          iconTheme: IconThemeData(color: Colors.white70),
         ),
         Center(
           child: SingleChildScrollView(
@@ -93,7 +82,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
               child: Column(
                 children: <Widget>[
                   //Image logo
-                  Image.asset('assets/abstract_logo_vector.png',width: 300.0,height: 200.0,),
+                  logoImage(),
                   Row(children: <Widget>[Text('')],),
                   //Field input
                   showLogin == false ? user_login(bloc, result) : user_signup(bloc),
@@ -133,6 +122,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
       stream: bloc.emailStream,
       builder: (context, snapshot){
         return TextField(
+          style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w300),
           textInputAction: TextInputAction.next,
           focusNode: first_node,
           keyboardType: TextInputType.emailAddress,
@@ -142,9 +132,16 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           decoration: InputDecoration(
             errorText: snapshot.hasError ? snapshot.error : null,
             labelText: 'Email',
-            border: OutlineInputBorder(
+            labelStyle: TextStyle(color: Colors.white70),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white30),
               borderRadius: BorderRadius.circular(30.0)),
-            hintStyle: TextStyle(wordSpacing: 50.0)),
+            hintStyle: TextStyle(wordSpacing: 50.0),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: Colors.blueAccent)
+            ),
+          ),
           onSubmitted: (value) {
             first_node.unfocus();
             FocusScope.of(context).requestFocus(second_node);
@@ -159,6 +156,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
       stream: bloc.passwordStream,
       builder: (context, snapshot){
         return TextField(
+          style: TextStyle(color: Colors.white70),
           focusNode: second_node,
           obscureText: true,
           onChanged: (value) {
@@ -167,8 +165,10 @@ class fieldState extends State<fill_field> with ValidatorMixin {
           decoration: InputDecoration(
             errorText: snapshot.hasError ? snapshot.error : null,
             labelText: 'Password',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0)
+            labelStyle: TextStyle(color: Colors.white30),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: Colors.white30)
             )
           ),
           onSubmitted: (value) {
@@ -182,30 +182,26 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return StreamBuilder(
       stream: bloc.submit,
       builder: (context, snapshot){
-        return RaisedButton(
-          padding: EdgeInsets.only(left: 60.0, right: 60.0),
-          color: Colors.amber,
-          textColor: Colors.white,
-          child: Text('Log In'),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          onPressed: 
-          () {
-            if ( result.data == null ) {
-              setState(() {
-                isProgress = true;
-              });
-            } else {
-              final id = bloc.submitMethod(result);
-              setState(() {
-                setUserID(id, directory);
-                isProgress = true;
-                Timer(Duration(seconds: 2), (){
-                  setState(()=> isProgress = false);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
-                });
-              });
-            }
-          },
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+            gradient: LinearGradient(
+              colors: [
+                Color(hexColor('#f46b45')),
+                Color(hexColor('#eea849'))
+              ]
+            )
+          ),
+          child: FlatButton(
+            padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 15.0, bottom: 15.0),
+            textColor: Colors.white70,
+            child: Text('Log In', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0),),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            onPressed: 
+            () {
+              validator(bloc, result);
+            },
+          ),
         );
       },
     );
@@ -217,19 +213,22 @@ class fieldState extends State<fill_field> with ValidatorMixin {
       children: <Widget>[
         // username(bloc),
         Row(children: <Widget>[Text('')],),
-        TextFormField(
-          
+        TextField(
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.emailAddress,
           focusNode: emailNode,
-          onFieldSubmitted: (term) {
+          onChanged: (term) {
             emailNode.unfocus();
             FocusScope.of(context).requestFocus(passwordNode);
           },
           decoration: InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0))),
+            labelStyle: TextStyle(color: Colors.white30),
+            labelText: 'Email',
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white30),
+              borderRadius: BorderRadius.circular(30.0)
+            )
+          ),
         ),
         Row(children: <Widget>[Text('')],),
         //Button
@@ -262,32 +261,42 @@ class fieldState extends State<fill_field> with ValidatorMixin {
   }
 
   Widget signUpButton() {
-    return RaisedButton(
-      padding: EdgeInsets.only(left: 60.0, right: 60.0),
-      color: Colors.amber,
-      textColor: Colors.white,
-      child: Text('Sign Un'),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: () {
-         Map<String, dynamic> userdata = {
-          'firstName': 'Daveat',
-          'lastName': 'Corn',
-          'email': 'condaveat@gmail.com',
-          'password': '12345',
-          'confirm_pass': '12345',
-          'image': 'https://firebasestorage.googleapis.com/v0/b/flutter-236705.appspot.com/o/17499428_1876523952588037_4176834688564950044_n.jpg?alt=media&token=f335c859-e7ab-4670-9ae4-b2a3dcab92a6'
-        };
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        gradient: LinearGradient(
+          colors: [
+            Color(hexColor('#f46b45')),
+            Color(hexColor('#eea849'))
+          ]
+        )
+      ),
+      child: FlatButton(
+        padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 15.0, bottom: 15.0),
+        textColor: Colors.white,
+        child: Text('Sign Up', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        onPressed: () {
+          Map<String, dynamic> userdata = {
+            'firstName': 'Daveat',
+            'lastName': 'Corn',
+            'email': 'condaveat@gmail.com',
+            'password': '12345',
+            'confirm_pass': '12345',
+            'image': 'https://firebasestorage.googleapis.com/v0/b/flutter-236705.appspot.com/o/17499428_1876523952588037_4176834688564950044_n.jpg?alt=media&token=f335c859-e7ab-4670-9ae4-b2a3dcab92a6'
+          };
 
-        final model = User_Data.userSignUp(userdata);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromSignUp(model)));
-      },
+          final model = User_Data.userSignUp(userdata);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromSignUp(model)));
+        },
+      ),
     );
   }
 
   Widget switchForm() {
     return FlatButton(
       textColor: Colors.cyanAccent[700],
-      child: Text('${showLogin == false ? "Sign up" : 'Already have account'}'),
+      child: Text('${showLogin == false ? "Sign up" : 'Already have account'}', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0)),
       onPressed: () {
         setState(() {
           if (showLogin == false)
@@ -301,7 +310,7 @@ class fieldState extends State<fill_field> with ValidatorMixin {
 
   Widget forgotPassword() {
     return FlatButton(
-      textColor: Colors.black,
+      textColor: Colors.white54,
       child: Text('Forgot password?'),
       onPressed: () {
         Navigator.push(
@@ -314,6 +323,24 @@ class fieldState extends State<fill_field> with ValidatorMixin {
     return Center(
       child: CircularProgressIndicator(),
     );
+  }
+
+  void validator(Bloc bloc, QueryResult result) {
+    if ( result.data == null ) {
+      setState(() {
+        isProgress = true;
+      });
+    } else {
+      final id = bloc.submitMethod(result);
+      setState(() {
+        setUserID(id, directory);
+        isProgress = true;
+        Timer(Duration(seconds: 2), (){
+          setState(()=> isProgress = false);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+        });
+      });
+    }
   }
 
 }

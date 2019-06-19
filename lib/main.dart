@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import './src/screen/defualt_page.dart';
-import './src/screen/input_field_screen.dart';
+import './src/screen/mainScreen/defualt_screen.dart';
 import './src/screen/homeScreen/home_screen.dart';
-import './src/screen/input_field_screen.dart';
+import './src/screen/mainScreen/login_screen.dart';
 import './src/provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter/rendering.dart';
 
 void main () {
-  // debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = false;
   runApp(App());
 }
 
@@ -33,7 +32,7 @@ class App extends StatelessWidget{
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home: login_screen(),
+            home: default_screen(),
           )
         ),
       ),

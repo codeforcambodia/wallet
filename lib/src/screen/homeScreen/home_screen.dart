@@ -1,14 +1,13 @@
 import 'package:Wallet_Apps/src/query_service/query_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../profile_screen.dart';
 import '../../model/model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linkedin_login/linkedin_login.dart';
-import './body/border_row.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../provider/Data_Store/data_storage.dart';
 import '../../query_service/query_service.dart';
+import '../../provider/hexaColorConvert.dart';
 
 class home_screen extends StatefulWidget{
 
@@ -44,8 +43,6 @@ class homeState extends State<home_screen>{
   bool progess = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final border = CardUser();
-
   //Widget Build
   Widget build(BuildContext context) {  
     return new Theme(
@@ -195,6 +192,15 @@ class homeState extends State<home_screen>{
   //body widget
   Widget bodyWidget(QueryResult result, int total) {
     return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(hexColor('#0f0c29')),
+            Color(hexColor('#302b63')),
+            Color(hexColor('#24243e'))
+          ]
+        )
+      ),
       child: Column(
         children: <Widget>[
           Container(
@@ -224,43 +230,44 @@ class homeState extends State<home_screen>{
           Container(
             margin: EdgeInsets.only(top: 5.0, bottom: 15.0),
             child: Center(
-              child: Text('Total ${total.toString()}.00 USD',style: TextStyle(fontSize: 20.0,)),
+              child: Text('Total $total.00 USD',style: TextStyle(fontSize: 20.0,)),
             ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: (result.data['user_data'][0]['books'].length),
               itemBuilder: (context, int index){
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)
-                  ),
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 15.0),
-                  color: Colors.orange[800],
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Container(width: 130.0,
-                          child: Text(result.data['user_data'][0]['books'][index]['title'],style: TextStyle(
-                            fontSize: 15.0,
-                          ),),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              left: BorderSide(width: 1.0, color: Colors.black)
-                            )
+                return Container(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)
+                    ),
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 15.0),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(width: 130.0,
+                            child: Text(result.data['user_data'][0]['books'][index]['title'],style: TextStyle(
+                              fontSize: 15.0,
+                            ),),
                           ),
-                          margin: EdgeInsets.only(left: 10.0),
-                          padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text('${result.data['user_data'][0]['books'][index]['price']} USD', style: TextStyle(color: Colors.black, fontSize: 20.0)),
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                left: BorderSide(width: 1.0, color: Colors.black)
+                              )
+                            ),
+                            margin: EdgeInsets.only(left: 10.0),
+                            padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text('${result.data['user_data'][0]['books'][index]['price']} USD', style: TextStyle(color: Colors.black, fontSize: 20.0)),
+                              ],
+                            )
                           )
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
