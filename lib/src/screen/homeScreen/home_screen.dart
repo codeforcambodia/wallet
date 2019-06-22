@@ -1,13 +1,15 @@
 import 'package:Wallet_Apps/src/query_service/query_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../model/model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import '../../model/model.dart';
 import '../../provider/Data_Store/data_storage.dart';
 import '../../query_service/query_service.dart';
 import '../../provider/hexaColorConvert.dart';
+import '../../provider/provider_widget.dart';
+import './drawer.dart';
 
 class home_screen extends StatefulWidget{
 
@@ -51,7 +53,7 @@ class homeState extends State<home_screen>{
         key: _scaffoldKey,
         drawer: Stack(
           children: <Widget>[
-            drawerWidget(),
+            drawerWidget(context),
             progess == false ? Container() : Center(child: CircularProgressIndicator(),)
           ],
         ),
@@ -64,7 +66,12 @@ class homeState extends State<home_screen>{
                 if ( result.data == null ) return Center(
                   child: CircularProgressIndicator(),
                 );
-                return bodyWidget(result, totalPrice(result.data['user_data'][0]['books']));
+                return Stack(
+                  children: <Widget>[
+                    background(),
+                    bodyWidget(result, totalPrice(result.data['user_data'][0]['books']))
+                  ],
+                );
               },
             );
           },
@@ -100,107 +107,9 @@ class homeState extends State<home_screen>{
     );
   }
 
-  Widget drawerWidget(){
-    return Drawer(
-      child: new Column(
-        children: <Widget>[
-          //Header of drawer
-          new DrawerHeader(
-            margin: EdgeInsets.all(0.0),
-            child: Column(
-              children: <Widget>[
-                new CircleAvatar(
-                  minRadius: 50.0,
-                  maxRadius: 50.0,
-                  backgroundImage: widget.dataFromGG != null ? NetworkImage(widget.dataFromGG.photoUrl) : AssetImage('assets/avatar.png'),
-                ),
-                Container(margin: EdgeInsets.only(bottom: 10.0),),
-                // Text('${widget.dataFromGG != null ? widget.dataFromGG.displayName : 'User name'}')
-              ],
-            ),
-          ),
-
-          //Expand listview
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                //Body of drawer
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 20.0),
-                  leading: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.home),
-                      Container(margin: EdgeInsets.only(right: 10.0),),
-                      Text('Home')
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 20.0),
-                  leading: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.account_circle),
-                      Container(margin: EdgeInsets.only(right: 10.0),),
-                      Text('Profile')
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 20.0),
-                  leading: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.settings),
-                      Container(margin: EdgeInsets.only(right: 10.0),),
-                      Text('Setting')
-                    ],
-                  ),
-                  onTap: () {},
-                )
-              ],
-            ),
-          ),
-          signOutButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget signOutButton() {
-    return new FlatButton(
-      color: Colors.red,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.exit_to_app),
-          Container(margin: EdgeInsets.only(right: 10.0),),
-          Text('Sign out')
-        ],
-      ),
-      onPressed: _singOut
-    );
-  }
-
   //body widget
   Widget bodyWidget(QueryResult result, int total) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(hexColor('#0f0c29')),
-            Color(hexColor('#302b63')),
-            Color(hexColor('#24243e'))
-          ]
-        )
-      ),
       child: Column(
         children: <Widget>[
           Container(
@@ -209,7 +118,7 @@ class homeState extends State<home_screen>{
             color: Colors.black,
             child: Stack(
               children: <Widget>[
-                Image(height: double.infinity, width: double.infinity ,image: NetworkImage('https://www.w3schools.com/w3css/img_lights.jpg'),),
+                Image(image: NetworkImage('https://images.pexels.com/photos/1499629/pexels-photo-1499629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'),),
                 Container(
                   margin: EdgeInsets.only(bottom: 15.0),
                   child: Align(
@@ -230,7 +139,13 @@ class homeState extends State<home_screen>{
           Container(
             margin: EdgeInsets.only(top: 5.0, bottom: 15.0),
             child: Center(
-              child: Text('Total $total.00 USD',style: TextStyle(fontSize: 20.0,)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Total ', style: TextStyle(fontSize: 20.0)),
+                  Text('$total.00 USD',style: TextStyle(fontSize: 20.0, color: Colors.orange))
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -243,13 +158,23 @@ class homeState extends State<home_screen>{
                       borderRadius: BorderRadius.circular(5.0)
                     ),
                     margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 15.0),
-                    child: Padding(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(hexColor("#073C71")),
+                            Color(hexColor("#373B44")),
+                          ]
+                        )
+                      ),
                       padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
                       child: Row(
                         children: <Widget>[
                           Container(width: 130.0,
                             child: Text(result.data['user_data'][0]['books'][index]['title'],style: TextStyle(
-                              fontSize: 15.0,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400
                             ),),
                           ),
                           Container(
@@ -262,7 +187,7 @@ class homeState extends State<home_screen>{
                             padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
                             child: Column(
                               children: <Widget>[
-                                Text('${result.data['user_data'][0]['books'][index]['price']} USD', style: TextStyle(color: Colors.black, fontSize: 20.0)),
+                                Text('${result.data['user_data'][0]['books'][index]['price']} USD', style: TextStyle(color: Colors.orange, fontSize: 20.0)),
                               ],
                             )
                           )
@@ -279,7 +204,7 @@ class homeState extends State<home_screen>{
     );
   }
 
-  void _singOut(){
+  void signOut(){
     if(widget.google != null) widget.google.signOut();
     setState(() {
       progess = true;

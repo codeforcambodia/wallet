@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../bloc/bloc.dart';
-import './background.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../model/model.dart';
 import '../../provider/provider_widget.dart';

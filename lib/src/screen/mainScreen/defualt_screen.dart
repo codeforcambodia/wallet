@@ -18,7 +18,6 @@ import '../../query_service/query_service.dart';
 import '../../provider/provider.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/hexaColorConvert.dart';
-import './background.dart';
 import '../../provider/provider_widget.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
@@ -49,7 +48,7 @@ class loginState extends State<default_screen> {
             child: Column(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(top: 30.0,bottom: 30.0),
+                  padding: EdgeInsets.only(top: 35.0,bottom: 35.0),
                 ),
                 Container(
                   height: 350.0,

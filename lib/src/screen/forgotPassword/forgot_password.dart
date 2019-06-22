@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../bloc/bloc.dart';
-import '../mainScreen/background.dart';
+import '../../provider/provider_widget.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../model/model.dart';
+import '../../provider/provider_widget.dart';
 import '../../provider/provider_widget.dart';
 
 class forgot_password extends StatefulWidget{
@@ -72,10 +73,7 @@ Widget input_field(BuildContext context) {
           contentPadding: EdgeInsets.only(top: 23.0, bottom: 23.0, left: 20.0),
           labelStyle: TextStyle(color: Colors.white30),
           labelText: 'Email',
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white30),
-            borderRadius: BorderRadius.circular(30.0)
-          )
+          enabledBorder: outlineInput(Colors.white30)
         ),
       ),
       //Button
@@ -91,8 +89,6 @@ Widget input_field(BuildContext context) {
     ],
   );
 }
-
-
 
 Widget sendButton(BuildContext context) {
   return Container(
@@ -110,7 +106,7 @@ Widget sendButton(BuildContext context) {
     child: FlatButton(
       padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 20.0, bottom: 20.0),
       textColor: Colors.white,
-      child: Text('Sign Up', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0)),
+      child: Text('Send', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       onPressed: () {
         

@@ -11,8 +11,8 @@ import '../../bloc/bloc.dart';
 import '../../provider/provider.dart';
 import '../../provider/Data_Store/data_storage.dart';
 import '../../query_service/query_service.dart';
-import './background.dart';
 import '../../provider/provider_widget.dart';
+import '../forgotPassword/forgot_password.dart';
 
 class login_screen extends StatefulWidget {
   @override
@@ -58,6 +58,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
         builder: (QueryResult result, {VoidCallback refetch}){
           if (result.data != null) {
             isProgress = false;
+            return CircularProgressIndicator();
           }
           return bodyWidget(bloc, result, context);
         },
@@ -85,7 +86,6 @@ class loginState extends State<login_screen> with ValidatorMixin {
                   iconTheme: IconThemeData(color: Colors.white70),
                 ),
                 Container(
-                  // margin: EdgeInsets.only(top: 30.0,bottom: 30.0),
                   height: 350,
                   child: Center(
                     child: logoImage(),
@@ -101,8 +101,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
               ],
             ),
           ),
-        )
-        // isProgress == true ? loading() : Container()
+        ),
+        // isProgress == true ? CircularProgressIndicator() : Container()
       ],
     );
   }
@@ -111,10 +111,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
   Widget user_login(Bloc bloc, QueryResult result, BuildContext context) {
     return Column(
       children: <Widget>[
-        emailField(bloc),
-        Row(children: <Widget>[Text('')],),
-        passwordField(bloc),
-        Container(margin: EdgeInsets.only(bottom: 25.0),),
+        Container( margin: EdgeInsets.only(bottom: 25.0), child: emailField(bloc)),
+        Container( margin: EdgeInsets.only(bottom: 30.0), child: passwordField(bloc)),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -209,32 +207,11 @@ class loginState extends State<login_screen> with ValidatorMixin {
             onPressed: 
             () {
               validator(bloc, result);
+              // Timer(Duration(seconds: 2), (){
+              //   setState(()=> isProgress = false);
+              // });
             },
           ),
-        );
-      },
-    );
-  }
-
-  //Below is User Sign Up
-
-  Widget username(Bloc bloc) {
-    return StreamBuilder(
-      stream: bloc.username,
-      builder: (context, snapshot){
-        return TextField(
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.text,
-          focusNode: fullnameNode,
-          decoration: InputDecoration(
-            labelText: 'Full Name',
-            border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0))
-          ),
-          onSubmitted: (term) {
-            fullnameNode.unfocus();
-            FocusScope.of(context).requestFocus(emailNode);
-          },
         );
       },
     );
@@ -258,17 +235,19 @@ class loginState extends State<login_screen> with ValidatorMixin {
   Widget forgotPassword() {
     return FlatButton(
       textColor: Colors.white54,
-      child: Text('Forgot password?'),
+      child: Text('Forgot password?', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400)),
       onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => forgotPassword()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => forgot_password()));
       },
     );
   }
 
   Widget loading() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Container(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
@@ -284,7 +263,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
         isProgress = true;
         Timer(Duration(seconds: 2), (){
           setState(()=> isProgress = false);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
         });
       });
     }
