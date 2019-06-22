@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../../model/model.dart';
 import './login_screen.dart';
+import './sign_up_screen.dart';
 import 'dart:ui';
 import '../homeScreen/home_screen.dart';
 import 'dart:convert';
@@ -18,6 +19,7 @@ import '../../provider/provider.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/hexaColorConvert.dart';
 import './background.dart';
+import '../../provider/provider_widget.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
@@ -43,40 +45,36 @@ class loginState extends State<default_screen> {
       body: Stack(
         children: <Widget>[
           background(),
-          Container(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(top: 30.0,bottom: 30.0),
+          Center(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 30.0,bottom: 30.0),
+                ),
+                Container(
+                  height: 350.0,
+                  child: Center(
+                    child: logoImage(),
+                  )
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      login(context),
+                      Container(margin: EdgeInsets.only(top: 10.0, bottom: 10.0),),
+                      createNewAcc(context)
+                    ],
                   ),
-                  Container(
-                    child: Expanded(
-                      child: Center(
-                        child: logoImage(),
-                      ),
-                    )
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        login(context),
-                        Container(margin: EdgeInsets.only(top: 10.0, bottom: 10.0),),
-                        createNewAcc()
-                      ],
-                    ),
-                  ),
-                  // Container(margin: EdgeInsets.only(top: 100.0, bottom: 100.0),),
+                ),
+                // Container(margin: EdgeInsets.only(top: 100.0, bottom: 100.0),),
 
-                  // Container(margin: EdgeInsets.only(bottom: 10),),
-                  // linkedInButton(),
-                  // Container(margin: EdgeInsets.only(bottom: 5),),
-                  // googleButton(),
-                  // Container(margin: EdgeInsets.only(bottom: 50.0),),
-                ],
-              ),
+                // Container(margin: EdgeInsets.only(bottom: 10),),
+                // linkedInButton(),
+                // Container(margin: EdgeInsets.only(bottom: 5),),
+                // googleButton(),
+                // Container(margin: EdgeInsets.only(bottom: 50.0),),
+              ],
             ),
           )
         ],
@@ -121,21 +119,13 @@ class loginState extends State<default_screen> {
     return CircularProgressIndicator();
   }
 
-  Widget login(context) {
+  Widget login(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(left: 80.0, right: 80.0),
+      margin: EdgeInsets.only(left: 70.0, right: 70.0),
       decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(
-            color: Colors.black45,
-            blurRadius: 7.0,
-            spreadRadius: 5.0,
-            offset: Offset(
-              5.0,
-              7.0
-            )
-          )
+          shadowButton()
         ],
         borderRadius: BorderRadius.circular(30.0),
         gradient: LinearGradient(
@@ -145,36 +135,31 @@ class loginState extends State<default_screen> {
           ]
         )
       ),
-      child: FlatButton(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0,),
-        textColor: Colors.white,
-        child: Text('Login & Register', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        onPressed: () {
-          Navigator.push(
-            context, MaterialPageRoute(builder: (context) => login_screen()));
-        },
-      ),
+      child: flatButton(login_screen(), 'Login', context),
     );
   }
 
-  Widget createNewAcc() {
+  Widget createNewAcc(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(left: 80.0, right: 80.0),
+      margin: EdgeInsets.only(left: 70.0, right: 70.0),
       decoration: BoxDecoration(
-        border: Border.all(width: 1.0,color: Color(hexColor('#2C5364'))),
+        border: Border.all(width: 2.0, color: Color(hexColor('#2C5364'))),
         borderRadius: BorderRadius.circular(30.0)
       ),
-      child: FlatButton(
-        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        child: Text('Create new account', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0),),
-        onPressed: (){
-
-        },
-      ),
+      child: flatButton(sign_up(), 'Create new account', context),
+    );
+  }
+  
+  Widget flatButton(dynamic pushClass, String text, BuildContext context) {
+    return FlatButton(
+      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      child: Text(text, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300,),),
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> pushClass));
+      }
     );
   }
 

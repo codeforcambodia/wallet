@@ -7,7 +7,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter/rendering.dart';
 
 void main () {
-  debugPaintSizeEnabled = false;
+  // debugPaintSizeEnabled = true;
   runApp(App());
 }
 
@@ -32,7 +32,7 @@ class App extends StatelessWidget{
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home: default_screen(),
+            home: default_screen()
           )
         ),
       ),

@@ -12,6 +12,7 @@ import '../../provider/provider.dart';
 import '../../provider/Data_Store/data_storage.dart';
 import '../../query_service/query_service.dart';
 import './background.dart';
+import '../../provider/provider_widget.dart';
 
 class login_screen extends StatefulWidget {
   @override
@@ -51,68 +52,79 @@ class loginState extends State<login_screen> with ValidatorMixin {
     Bloc bloc = Provider.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: false,
       body: Query(
         options: QueryOptions(document: user_login_data),
         builder: (QueryResult result, {VoidCallback refetch}){
           if (result.data != null) {
             isProgress = false;
           }
-          return bodyWidget(bloc, result);
+          return bodyWidget(bloc, result, context);
         },
       ),
     );   
   }
   
   //body widget
-  Widget bodyWidget(Bloc bloc, QueryResult result) {
+  Widget bodyWidget(Bloc bloc, QueryResult result, BuildContext context) {
     return Stack(
       children: <Widget>[
-        // Background Image
         background(),
-        AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          iconTheme: IconThemeData(color: Colors.white70),
-        ),
-        Center(
-          child: SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.all(30.0),
-              child: Column(
-                children: <Widget>[
-                  //Image logo
-                  logoImage(),
-                  Row(children: <Widget>[Text('')],),
-                  //Field input
-                  showLogin == false ? user_login(bloc, result) : user_signup(bloc),
-                  // Container( margin: EdgeInsets.only(bottom: 50.0), ),
-                ],
-              ),
+        // Background Image
+        SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 50.0),
+            // height: MediaQuery.of(context).size.height
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //Image logo
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  iconTheme: IconThemeData(color: Colors.white70),
+                ),
+                Container(
+                  // margin: EdgeInsets.only(top: 30.0,bottom: 30.0),
+                  height: 350,
+                  child: Center(
+                    child: logoImage(),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0), 
+                  child: user_login(bloc, result, context),
+                ),
+                //Field input
+                // showLogin == false ? user_login(bloc, result) : user_signup(bloc),
+                // Container( margin: EdgeInsets.only(bottom: 50.0), ),
+              ],
             ),
           ),
-        ),
+        )
         // isProgress == true ? loading() : Container()
       ],
     );
   }
 
   //Below is User Login
-  Widget user_login(Bloc bloc, QueryResult result) {
+  Widget user_login(Bloc bloc, QueryResult result, BuildContext context) {
     return Column(
       children: <Widget>[
         emailField(bloc),
         Row(children: <Widget>[Text('')],),
         passwordField(bloc),
-        Row(children: <Widget>[Text('')],),
-        Row(
+        Container(margin: EdgeInsets.only(bottom: 25.0),),
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             loginButton(bloc, result),
-            switchForm(),
+            Container(
+              margin: EdgeInsets.all(15.0),
+              child: forgotPassword(),
+            )
           ],
         ),
-        forgotPassword()
       ],
     );
   }
@@ -130,17 +142,13 @@ class loginState extends State<login_screen> with ValidatorMixin {
             bloc.addEmail(userInput);
           },
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(top: 23.0, bottom: 23.0, left: 20.0),
             errorText: snapshot.hasError ? snapshot.error : null,
             labelText: 'Email',
-            labelStyle: TextStyle(color: Colors.white70),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white30),
-              borderRadius: BorderRadius.circular(30.0)),
+            labelStyle: TextStyle(color: Colors.white30),
+            enabledBorder: outlineInput(Colors.white30),
             hintStyle: TextStyle(wordSpacing: 50.0),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(color: Colors.blueAccent)
-            ),
+            focusedBorder: outlineInput(Colors.blueAccent),
           ),
           onSubmitted: (value) {
             first_node.unfocus();
@@ -163,13 +171,12 @@ class loginState extends State<login_screen> with ValidatorMixin {
             bloc.addPassword(value);
           },
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(top: 23.0, bottom: 23.0, left: 20.0),
             errorText: snapshot.hasError ? snapshot.error : null,
             labelText: 'Password',
             labelStyle: TextStyle(color: Colors.white30),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(color: Colors.white30)
-            )
+            enabledBorder: outlineInput(Colors.white30),
+            focusedBorder: outlineInput(Colors.blueAccent)
           ),
           onSubmitted: (value) {
           },
@@ -183,6 +190,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
       stream: bloc.submit,
       builder: (context, snapshot){
         return Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(left: 35.0, right: 35.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             gradient: LinearGradient(
@@ -193,9 +202,9 @@ class loginState extends State<login_screen> with ValidatorMixin {
             )
           ),
           child: FlatButton(
-            padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 15.0, bottom: 15.0),
+            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
             textColor: Colors.white70,
-            child: Text('Log In', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0),),
+            child: Text('Login', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0),),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
             onPressed: 
             () {
@@ -208,35 +217,6 @@ class loginState extends State<login_screen> with ValidatorMixin {
   }
 
   //Below is User Sign Up
-  Widget user_signup(Bloc bloc) {
-    return Column(
-      children: <Widget>[
-        // username(bloc),
-        Row(children: <Widget>[Text('')],),
-        TextField(
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.emailAddress,
-          focusNode: emailNode,
-          onChanged: (term) {
-            emailNode.unfocus();
-            FocusScope.of(context).requestFocus(passwordNode);
-          },
-          decoration: InputDecoration(
-            labelStyle: TextStyle(color: Colors.white30),
-            labelText: 'Email',
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white30),
-              borderRadius: BorderRadius.circular(30.0)
-            )
-          ),
-        ),
-        Row(children: <Widget>[Text('')],),
-        //Button
-        signUpButton(),
-        switchForm(),
-      ],
-    );
-  }
 
   Widget username(Bloc bloc) {
     return StreamBuilder(
@@ -257,39 +237,6 @@ class loginState extends State<login_screen> with ValidatorMixin {
           },
         );
       },
-    );
-  }
-
-  Widget signUpButton() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
-        gradient: LinearGradient(
-          colors: [
-            Color(hexColor('#f46b45')),
-            Color(hexColor('#eea849'))
-          ]
-        )
-      ),
-      child: FlatButton(
-        padding: EdgeInsets.only(left: 60.0, right: 60.0, top: 15.0, bottom: 15.0),
-        textColor: Colors.white,
-        child: Text('Sign Up', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        onPressed: () {
-          Map<String, dynamic> userdata = {
-            'firstName': 'Daveat',
-            'lastName': 'Corn',
-            'email': 'condaveat@gmail.com',
-            'password': '12345',
-            'confirm_pass': '12345',
-            'image': 'https://firebasestorage.googleapis.com/v0/b/flutter-236705.appspot.com/o/17499428_1876523952588037_4176834688564950044_n.jpg?alt=media&token=f335c859-e7ab-4670-9ae4-b2a3dcab92a6'
-          };
-
-          final model = User_Data.userSignUp(userdata);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromSignUp(model)));
-        },
-      ),
     );
   }
 
