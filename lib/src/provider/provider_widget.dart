@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './hexaColorConvert.dart';
 
 //User input Outline
+String color = "#1C2C44";
+// '#030D1E'
 OutlineInputBorder outlineInput(Color mycolor) {
   return OutlineInputBorder(
     borderSide: BorderSide(color: mycolor, width: 3),
@@ -10,7 +12,7 @@ OutlineInputBorder outlineInput(Color mycolor) {
 }
 
 //Button shadow
-BoxShadow shadowButton(){
+BoxShadow shadow(){
   return BoxShadow(
     color: Colors.black45,
     blurRadius: 7.0,
@@ -27,8 +29,8 @@ Widget background(){
     decoration: BoxDecoration(
       gradient: LinearGradient(
         colors: [
-          Color(hexColor('#030D1E')),
-          Color(hexColor('#030D1E'))
+          Color(hexColor(color)),
+          Color(hexColor(color))
         ]
       )
     ),
@@ -39,8 +41,8 @@ BoxDecoration homeBackground() {
   return BoxDecoration(
     gradient: LinearGradient(
       colors: [
-        Color(hexColor('#030D1E')),
-        Color(hexColor('#030D1E'))
+        Color(hexColor(color)),
+        Color(hexColor(color))
       ]
     )
   );
@@ -49,7 +51,30 @@ BoxDecoration homeBackground() {
 Widget logoImage() {
   return Image.asset(
     'assets/abstract_logo_vector.png',
-    width: 300.0,
-    height: 200.0,
+    width: 250.0,
+    height: 150.0,
   );
+}
+
+void dialog(BuildContext context, String text) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Text(text),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    }
+  );
+}
+
+Widget progress() {
+  return Center(child: CircularProgressIndicator(),);
 }

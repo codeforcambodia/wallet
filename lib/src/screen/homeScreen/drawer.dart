@@ -85,6 +85,7 @@ Widget drawerWidget(BuildContext context){
 }
 
 Widget signOutButton(BuildContext context) {
+  var circular = home_screen();
   return Container(
     decoration: homeBackground(),
     child: FlatButton(
@@ -99,7 +100,7 @@ Widget signOutButton(BuildContext context) {
         ],
       ),
       onPressed: (){
-        Navigator.of(context).popUntil(ModalRoute.withName('/'));
+        circular.sig
       }
     ),
   );

@@ -26,7 +26,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
 
   final String directory = "userID";
 
-  bool showLogin = false, isProgress = false;
+  bool isProgress = false;
 
   final formkey = GlobalKey<FormState>();
 
@@ -50,19 +50,20 @@ class loginState extends State<login_screen> with ValidatorMixin {
   Widget build(BuildContext context) {
 
     Bloc bloc = Provider.of(context);
-
+    QueryResult result;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: Query(
-        options: QueryOptions(document: user_login_data),
-        builder: (QueryResult result, {VoidCallback refetch}){
-          if (result.data != null) {
-            isProgress = false;
-            return CircularProgressIndicator();
-          }
-          return bodyWidget(bloc, result, context);
-        },
-      ),
+      body: bodyWidget(bloc, result, context)
+      // Query(
+      //   options: QueryOptions(document: user_login_data),
+      //   builder: (QueryResult result, {VoidCallback refetch}){
+      //     // if (result.data != null) {
+      //     //   isProgress = false;
+      //     //   return CircularProgressIndicator();
+      //     // }
+      //     return 
+      //   },
+      // ),
     );   
   }
   
@@ -71,38 +72,36 @@ class loginState extends State<login_screen> with ValidatorMixin {
     return Stack(
       children: <Widget>[
         background(),
-        // Background Image
-        SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.only(bottom: 50.0),
-            // height: MediaQuery.of(context).size.height
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //Image logo
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
-                  iconTheme: IconThemeData(color: Colors.white70),
-                ),
-                Container(
-                  height: 350,
-                  child: Center(
-                    child: logoImage(),
+        Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 50.0),
+              child: Column(
+                children: <Widget>[
+                  //Image logo
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                    iconTheme: IconThemeData(color: Colors.white70),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0), 
-                  child: user_login(bloc, result, context),
-                ),
-                //Field input
-                // showLogin == false ? user_login(bloc, result) : user_signup(bloc),
-                // Container( margin: EdgeInsets.only(bottom: 50.0), ),
-              ],
+                  Container(
+                    margin: EdgeInsets.only(bottom: 50.0),
+                    child: Center(
+                      child: logoImage(),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0), 
+                    child: user_login(bloc, result, context),
+                  ),
+                  //Field input
+                  // Container( margin: EdgeInsets.only(bottom: 50.0), ),
+                ],
+              ),
             ),
           ),
         ),
-        // isProgress == true ? CircularProgressIndicator() : Container()
+        isProgress == true ? progress() : Container(),
       ],
     );
   }
@@ -204,33 +203,44 @@ class loginState extends State<login_screen> with ValidatorMixin {
             textColor: Colors.white70,
             child: Text('Login', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0),),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-            onPressed: 
+            onPressed: snapshot.data != null ?
             () {
-              validator(bloc, result);
+              setState(() {
+                isProgress = true;
+              });
+              bloc.submitMethod().then((data){
+                if ( data == true) {
+                  setState(() {
+                    isProgress = false;
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
+                  });
+                }
+              });
+              // validator(bloc, result);
               // Timer(Duration(seconds: 2), (){
               //   setState(()=> isProgress = false);
               // });
-            },
+            } : null,
           ),
         );
       },
     );
   }
 
-  Widget switchForm() {
-    return FlatButton(
-      textColor: Colors.cyanAccent[700],
-      child: Text('${showLogin == false ? "Sign up" : 'Already have account'}', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0)),
-      onPressed: () {
-        setState(() {
-          if (showLogin == false)
-            showLogin = true;
-          else
-            showLogin = false;
-        });
-      },
-    );
-  }
+  // Widget switchForm() {
+  //   return FlatButton(
+  //     textColor: Colors.cyanAccent[700],
+  //     child: Text('${showLogin == false ? "Sign up" : 'Already have account'}', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15.0)),
+  //     onPressed: () {
+  //       setState(() {
+  //         if (showLogin == false)
+  //           showLogin = true;
+  //         else
+  //           showLogin = false;
+  //       });
+  //     },
+  //   );
+  // }
 
   Widget forgotPassword() {
     return FlatButton(
@@ -252,21 +262,22 @@ class loginState extends State<login_screen> with ValidatorMixin {
   }
 
   void validator(Bloc bloc, QueryResult result) {
-    if ( result.data == null ) {
-      setState(() {
-        isProgress = true;
-      });
-    } else {
-      final id = bloc.submitMethod(result);
-      setState(() {
-        setUserID(id, directory);
-        isProgress = true;
-        Timer(Duration(seconds: 2), (){
-          setState(()=> isProgress = false);
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
-        });
-      });
-    }
+    // if ( result.data == null ) {
+    //   setState(() {
+    //     isProgress = true;
+    //   });
+    // } else {
+    //   final id = bloc.submitMethod(result);
+    //   setState(() {
+    //     setUserID(id, directory);
+    //     isProgress = true;
+    //     Timer(Duration(seconds: 2), (){
+    //       setState(()=> isProgress = false);
+    //       Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen()));
+    //     });
+    //   });
+    // }
+
   }
 
 }

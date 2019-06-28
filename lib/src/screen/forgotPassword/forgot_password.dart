@@ -80,7 +80,7 @@ Widget input_field(BuildContext context) {
       Container(
         decoration: BoxDecoration(
           boxShadow: [
-            shadowButton()
+            shadow()
           ]
         ),
         margin: EdgeInsets.all(25.0),

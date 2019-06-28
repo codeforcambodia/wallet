@@ -5,10 +5,7 @@ class Provider extends InheritedWidget{
 
   final bloc = Bloc();
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) {
-    // TODO: implement updateShouldNotify
-    return null;
-  }
+  bool updateShouldNotify(_) => true;
 
   Provider({Widget child}) : super(child: child);
 

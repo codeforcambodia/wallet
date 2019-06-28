@@ -42,7 +42,9 @@ class home_screen extends StatefulWidget{
 class homeState extends State<home_screen>{
 
   TabController _tabController;
-  bool progess = false;
+  bool isProgess = false;
+
+  QueryResult result;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   //Widget Build
@@ -54,28 +56,35 @@ class homeState extends State<home_screen>{
         drawer: Stack(
           children: <Widget>[
             drawerWidget(context),
-            progess == false ? Container() : Center(child: CircularProgressIndicator(),)
+            isProgess == false ? Container() : progress()
           ],
         ),
-        body: FutureBuilder(
-          future: fetchId('userID'),
-          builder: (context, snapshot){
-            return Query(
-              options: QueryOptions(document: query(snapshot.data)),
-              builder: (QueryResult result, {VoidCallback refetch}){
-                if ( result.data == null ) return Center(
-                  child: CircularProgressIndicator(),
-                );
-                return Stack(
-                  children: <Widget>[
-                    background(),
-                    bodyWidget(result, totalPrice(result.data['user_data'][0]['books']))
-                  ],
-                );
-              },
-            );
-          },
-        ),
+        body: Stack(
+          children: <Widget>[
+            background(),
+            // totalPrice(result.data['user_data'][0]['books'])
+            bodyWidget(result, 0)
+          ],
+        ) 
+        // FutureBuilder(
+        //   future: fetchId('userID'),
+        //   builder: (context, snapshot){
+        //     return Query(
+        //       options: QueryOptions(document: query(snapshot.data)),
+        //       builder: (QueryResult result, {VoidCallback refetch}){
+        //         if ( result.data == null ) return Center(
+        //           child: CircularProgressIndicator(),
+        //         );
+        //         return Stack(
+        //           children: <Widget>[
+        //             background(),
+        //             bodyWidget(result, totalPrice(result.data['user_data'][0]['books']))
+        //           ],
+        //         );
+        //       },
+        //     );
+        //   },
+        // ),
       ),
     );
   }
@@ -118,12 +127,20 @@ class homeState extends State<home_screen>{
             color: Colors.black,
             child: Stack(
               children: <Widget>[
-                Image(image: NetworkImage('https://images.pexels.com/photos/1499629/pexels-photo-1499629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'),),
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/header.jpeg'),
+                      fit: BoxFit.fill
+                    )
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.only(bottom: 15.0),
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Text(result.data['user_data'][0]['user_name'],style: TextStyle(fontSize: 32.0,)),
+                    // result.data['user_data'][0]['user_name']
+                    child: Text('User name',style: TextStyle(fontSize: 32.0,)),
                   ),
                 ),
                 appbarWidget()
@@ -150,16 +167,19 @@ class homeState extends State<home_screen>{
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: (result.data['user_data'][0]['books'].length),
+              itemCount: /* (result.data['user_data'][0]['books'].length) */ 10,
               itemBuilder: (context, int index){
                 return Container(
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 15.0),
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0)
                     ),
-                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 15.0),
-                    child: Container(
+                    child: Container  (
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          shadow()
+                        ],
                         borderRadius: BorderRadius.circular(5.0),
                         gradient: LinearGradient(
                           colors: [
@@ -168,29 +188,48 @@ class homeState extends State<home_screen>{
                           ]
                         )
                       ),
-                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
+                      padding: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 5.0),
                       child: Row(
+                        mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Container(width: 130.0,
-                            child: Text(result.data['user_data'][0]['books'][index]['title'],style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w400
-                            ),),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                left: BorderSide(width: 1.0, color: Colors.black)
-                              )
+                          Flexible(
+                            flex: 2,
+                            child: Container(
+                              // width: 100.0,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  right: BorderSide(width: 1.0, color: Colors.black)
+                                )
+                              ),
+                              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+                                // ${result.data['user_data'][0]['books'][index]['price']}
+                              child: Center(
+                                child: Text('10 USD', style: TextStyle(color: Colors.orange, fontSize: 20.0)),
+                              ),
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
-                            padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                            child: Column(
-                              children: <Widget>[
-                                Text('${result.data['user_data'][0]['books'][index]['price']} USD', style: TextStyle(color: Colors.orange, fontSize: 20.0)),
-                              ],
-                            )
-                          )
+                          ),
+                          Flexible(
+                            flex: 3,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                              margin: EdgeInsets.only(left: 5.0),
+                              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 10.0),
+                              // ${result.data['user_data'][0]['books'][index]['price']}
+                              child: Text(' IntendedVsync=11192334779883, Vsync=11193168113183, NeweSD', style: TextStyle(color: Colors.orange, fontSize: 20.0)),
+                            ),
+                            ),
+                          ),
+                          // SingleChildScrollView(
+                          //   scrollDirection: Axis.horizontal,
+                          //   child: Container(
+                          //     margin: EdgeInsets.only(left: 10.0),
+                          //     child: Text("${result.data['user_data'][0]['books'][index]['title']} hello mother fucker bitch",style: TextStyle(
+                          //       fontSize: 18.0,
+                          //       fontWeight: FontWeight.w300
+                          //     ),),
+                          //   )
+                          // )
                         ],
                       ),
                     ),
@@ -205,13 +244,13 @@ class homeState extends State<home_screen>{
   }
 
   void signOut(){
-    if(widget.google != null) widget.google.signOut();
+    // if(widget.google != null) widget.google.signOut();
     setState(() {
-      progess = true;
+      isProgess = true;
     });
     new Timer(Duration(seconds: 2), (){
       setState(() {
-        progess = false;
+        isProgess = false;
       });
       Navigator.of(context).popUntil(ModalRoute.withName('/'));
     });

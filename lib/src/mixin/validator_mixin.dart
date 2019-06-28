@@ -15,7 +15,4 @@ class ValidatorMixin {
     else sink.add('');
   }); 
 
-  final validateName = StreamTransformer.fromHandlers(handleData: (data, sink){
-    if (data.length >15) print('Hello world');
-  });
 }

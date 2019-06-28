@@ -124,7 +124,7 @@ class loginState extends State<default_screen> {
       margin: EdgeInsets.only(left: 70.0, right: 70.0),
       decoration: BoxDecoration(
         boxShadow: [
-          shadowButton()
+          shadow()
         ],
         borderRadius: BorderRadius.circular(30.0),
         gradient: LinearGradient(
@@ -134,7 +134,7 @@ class loginState extends State<default_screen> {
           ]
         )
       ),
-      child: flatButton(login_screen(), 'Login', context),
+      child: flatButton(login_screen(), 'Login', context)
     );
   }
 
