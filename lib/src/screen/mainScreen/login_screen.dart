@@ -212,6 +212,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
               setState(() {
                 isProgress = true;
               });
+              
               bloc.submitMethod().then((data){
                 if ( data == true) {
                   setState(() {
