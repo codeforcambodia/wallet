@@ -99,9 +99,9 @@ Widget signOutButton(BuildContext context) {
           Text('Sign out', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0),)
         ],
       ),
-      onPressed: (){
-        circular.sig
-      }
+      // onPressed: (){
+      //   circular.sig
+      // }
     ),
   );
 }

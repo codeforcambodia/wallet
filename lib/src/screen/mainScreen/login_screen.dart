@@ -24,6 +24,7 @@ class login_screen extends StatefulWidget {
 
 class loginState extends State<login_screen> with ValidatorMixin {
 
+  
   final String directory = "userID";
 
   bool isProgress = false;
@@ -45,6 +46,9 @@ class loginState extends State<login_screen> with ValidatorMixin {
   @override
   void initState(){
     super.initState();
+    setState(() {
+      
+    });
   }
   
   Widget build(BuildContext context) {
