@@ -208,15 +208,14 @@ class loginState extends State<login_screen> with ValidatorMixin {
                 borderRadius: BorderRadius.circular(30.0)),
             onPressed: snapshot.data != null
               ? () {
-                setState(() {
-                  isProgress = true;
-                });
+                setState(() =>isProgress = true );
                 checkConnection(context).then((isConnect){
                   if ( isConnect == true ) {
                     validator_login(bloc, context);
                   } else {
                     setState(() {
                       isProgress = false;
+                      no_internet(context);
                     });
                   }
                 });
@@ -255,7 +254,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
         Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
       }
     }).catchError((onError){
-      setState(() { isProgress = false; });
+      setState(() => isProgress = false );
     });
   }
 }

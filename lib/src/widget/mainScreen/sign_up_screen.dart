@@ -5,6 +5,7 @@ import '../../bloc/bloc.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../provider/provider_widget.dart';
 import '../../provider/provider.dart';
+import '../../provider/check_connection.dart';
 
 class sign_up extends StatefulWidget{
   @override
@@ -14,14 +15,13 @@ class sign_up extends StatefulWidget{
 }
 
 class sign_up_state extends State<sign_up> {
-
   bool isProgress = false;
   Widget build(BuildContext context) {
-
     Bloc bloc = Provider.of(context);
     // Bloc bloc 
     return Scaffold(
       resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       body: Container(
         child: body(context, bloc),
       ),
@@ -83,10 +83,7 @@ class sign_up_state extends State<sign_up> {
               },
             ),
             //Button
-            Container(
-              margin: EdgeInsets.all(25.0),
-              child: signUpButton(context, snapshot, bloc),
-            )
+            signUpButton(context, snapshot, bloc)
           ],
         );
       },
@@ -94,12 +91,12 @@ class sign_up_state extends State<sign_up> {
   }
   Widget signUpButton(BuildContext context, AsyncSnapshot snapshot, Bloc bloc) {
     return Container(
-      margin: EdgeInsets.only(left: 35.0, right: 35.0),
+      margin: EdgeInsets.only(top: 30),
       width: double.infinity,
       decoration: BoxDecoration(
-        boxShadow: [
-          shadow()
-        ],
+        // boxShadow: [
+        //   shadow()
+        // ],
         borderRadius: BorderRadius.circular(30.0),
         gradient: LinearGradient(
           colors: [
@@ -114,21 +111,28 @@ class sign_up_state extends State<sign_up> {
         child: Text('Sign Up', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         onPressed: () {
-          setState(() {
-            isProgress = true;
+          setState(() => isProgress = true );
+          checkConnection(context).then((isConnect){
+            if ( isConnect == true ){
+              validator(bloc);
+            } else {
+              setState(() {
+                isProgress = false; 
+                no_internet(context);
+              });
+            }
           });
-          
         },
       ),
     );
   }
   validator(Bloc bloc) {
-    bloc.registerUser(context).then((onValue){
-      if (onValue == true) {
-        setState(() {
-          isProgress = false;
-        });
-      }
+    bloc.registerUser(context)
+    .then((onValue){
+      setState(() => isProgress = false );
+    })
+    .catchError((onError){
+      setState(() => isProgress = false );
     });
   }
 }

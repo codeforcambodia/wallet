@@ -75,6 +75,25 @@ void dialog(BuildContext context, String text) {
   );
 }
 
+void no_internet(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text('No internet'),
+        content: Text("You're not connect to network"),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Close'),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ]
+      );
+    }
+  );
+}
+
 Widget progress() {
   return Center(child: CircularProgressIndicator(),);
 }

@@ -28,7 +28,7 @@ class Bloc with ValidatorMixin {
     return await user_login(_email.value, _password.value)
     .then((onValue) {
       if (onValue['message'] == null) return true;
-      else dialog(context, (onValue['message']+'!'));
+      else dialog(context, (onValue['message']+' !'));
       return false;
     })
     .catchError((onError){
@@ -38,12 +38,14 @@ class Bloc with ValidatorMixin {
   }
 
   Future<bool> registerUser(BuildContext context) {
-    if (_usersignup != null) {
-      return user_register(_usersignup.value).then((onValue) {
-        dialog(context, onValue['message']);
-        return true;
-      });
-    }
+    return user_register(_usersignup.value).then((onValue) {
+      dialog(context, (onValue['message']+' !'));
+      return true;
+    })
+    .catchError((onError){
+      dialog(context, 'Something goes wrong!');
+      return false;
+    });
   }
 
   dispose() {
