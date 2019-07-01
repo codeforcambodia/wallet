@@ -1,12 +1,12 @@
-import 'package:Wallet_Apps/src/screen/mainScreen/sign_up_screen.dart';
+import 'package:Wallet_Apps/src/Widget/mainScreen/sign_up_screen.dart';
 import 'package:flutter/material.dart';
-import './src/screen/mainScreen/defualt_screen.dart';
-import './src/screen/homeScreen/home_screen.dart';
-import './src/screen/mainScreen/login_screen.dart';
+import './src/widget/mainScreen/defualt_screen.dart';
+import './src/widget/homeScreen/home_screen.dart';
+import './src/widget/mainScreen/login_screen.dart';
 import './src/provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter/rendering.dart';
-import 'src/screen/restapi.dart';
+import 'src/widget/restapi.dart';
 
 void main () {
   // debugPaintSizeEnabled = true;
@@ -40,7 +40,7 @@ class App extends StatelessWidget{
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: default_screen(),
+        home: sign_up(),
       )
     );
   }

@@ -3,10 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/hexaColorConvert.dart';
-import '../../model/model.dart';
 import '../../provider/provider_widget.dart';
 import '../../provider/provider.dart';
-import '../../rest_data/rest_api.dart';
 
 class sign_up extends StatefulWidget{
   @override
@@ -119,15 +117,19 @@ class sign_up_state extends State<sign_up> {
           setState(() {
             isProgress = true;
           });
-          bloc.registerUser(context).then((onValue){
-            if (onValue == true) {
-              setState(() {
-                isProgress = false;
-              });
-            }
-          });},
+          
+        },
       ),
     );
+  }
+  validator(Bloc bloc) {
+    bloc.registerUser(context).then((onValue){
+      if (onValue == true) {
+        setState(() {
+          isProgress = false;
+        });
+      }
+    });
   }
 }
 

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './hexaColorConvert.dart';
+import 'dart:async';
 
 //User input Outline
 String color = "#1C2C44";
@@ -60,14 +62,12 @@ void dialog(BuildContext context, String text) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        content: Text(text),
+      return CupertinoAlertDialog(
+        title: Text(text),
         actions: <Widget>[
-          FlatButton(
+          CupertinoDialogAction(
             child: Text('Close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
           )
         ],
       );
@@ -77,4 +77,10 @@ void dialog(BuildContext context, String text) {
 
 Widget progress() {
   return Center(child: CircularProgressIndicator(),);
+}
+
+void timer(Function fc) {
+  Timer(Duration(seconds: 7), (){
+    fc();
+  });
 }

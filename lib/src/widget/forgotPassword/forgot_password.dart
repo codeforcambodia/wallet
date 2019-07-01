@@ -78,11 +78,6 @@ Widget input_field(BuildContext context) {
       ),
       //Button
       Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            shadow()
-          ]
-        ),
         margin: EdgeInsets.all(25.0),
         child: sendButton(context),
       )
@@ -95,6 +90,7 @@ Widget sendButton(BuildContext context) {
     margin: EdgeInsets.only(left: 35.0, right: 35.0),
     width: double.infinity,
     decoration: BoxDecoration(
+      boxShadow: [ shadow() ],
       borderRadius: BorderRadius.circular(30.0),
       gradient: LinearGradient(
         colors: [
