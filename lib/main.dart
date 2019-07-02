@@ -40,7 +40,7 @@ class App extends StatelessWidget{
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: sign_up(),
+        home: default_screen(),
       )
     );
   }

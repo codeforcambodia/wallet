@@ -251,7 +251,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
     bloc.submitMethod(context).then((data) {
       setState(() { isProgress = false; });
       if (data == true) {
-        Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
+        print('success !');
+        // Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
       }
     }).catchError((onError){
       setState(() => isProgress = false );

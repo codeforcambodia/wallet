@@ -32,6 +32,7 @@ class Bloc with ValidatorMixin {
       return false;
     })
     .catchError((onError){
+      print(onError);
       dialog(context, 'Something goes wrong!');
       return false;
     });
