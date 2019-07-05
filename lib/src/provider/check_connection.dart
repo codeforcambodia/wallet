@@ -7,5 +7,3 @@ checkConnection(BuildContext context) async {
   if (connectivityResult == ConnectivityResult.none) return false;
   else return true;
 }
-
-

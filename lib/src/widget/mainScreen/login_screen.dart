@@ -9,7 +9,7 @@ import '../../model/model.dart';
 import '../../mixin/validator_mixin.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/provider.dart';
-import '../../provider/Data_Store/data_storage.dart';
+import '../../provider/small_data/data_storage.dart';
 import '../../query_service/query_service.dart';
 import '../../provider/provider_widget.dart';
 import '../forgotPassword/forgot_password.dart';
@@ -33,6 +33,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
   //User login
   final FocusNode first_node = FocusNode();
   final FocusNode second_node = FocusNode();
+  TextEditingController userlogin = TextEditingController();
+  TextEditingController userpasswords = TextEditingController();
 
   //User signUp
   final FocusNode fullnameNode = FocusNode();
@@ -42,14 +44,8 @@ class loginState extends State<login_screen> with ValidatorMixin {
 
   QueryResult queryResult = QueryResult();
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {});
-  }
-
   Widget build(BuildContext context) {
-    Bloc bloc = Provider.of(context);
+    Bloc bloc = Bloc();
     QueryResult result;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -110,14 +106,12 @@ class loginState extends State<login_screen> with ValidatorMixin {
   Widget user_login(Bloc bloc, QueryResult result, BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
-            margin: EdgeInsets.only(bottom: 25.0), child: emailField(bloc)),
-        Container(
-            margin: EdgeInsets.only(bottom: 30.0), child: passwordField(bloc)),
+        Container(margin: EdgeInsets.only(bottom: 25.0), child: emailField(bloc)),
+        Container(margin: EdgeInsets.only(bottom: 30.0), child: passwordField(bloc)),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            loginButton(bloc, result),
+            loginButton(bloc),
             Container(
               margin: EdgeInsets.all(15.0),
               child: forgotPassword(),
@@ -133,11 +127,13 @@ class loginState extends State<login_screen> with ValidatorMixin {
       stream: bloc.emailStream,
       builder: (context, snapshot) {
         return TextField(
+          controller: userlogin,
           style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w300),
           textInputAction: TextInputAction.next,
           focusNode: first_node,
           keyboardType: TextInputType.emailAddress,
           onChanged: (userInput) {
+            if ( userInput == null ) print('email null');
             bloc.addEmail(userInput);
           },
           decoration: InputDecoration(
@@ -164,10 +160,12 @@ class loginState extends State<login_screen> with ValidatorMixin {
       stream: bloc.passwordStream,
       builder: (context, snapshot) {
         return TextField(
+          controller: userpasswords,
           style: TextStyle(color: Colors.white70),
           focusNode: second_node,
           obscureText: true,
           onChanged: (value) {
+            if(value == null ) print('Password null');
             bloc.addPassword(value);
           },
           decoration: InputDecoration(
@@ -184,7 +182,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
     );
   }
 
-  Widget loginButton(bloc, QueryResult result) {
+  Widget loginButton(bloc) {
     return StreamBuilder(
       stream: bloc.submit,
       builder: (context, snapshot) {
@@ -206,21 +204,19 @@ class loginState extends State<login_screen> with ValidatorMixin {
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            onPressed: snapshot.data != null
-              ? () {
-                setState(() =>isProgress = true );
-                checkConnection(context).then((isConnect){
-                  if ( isConnect == true ) {
-                    validator_login(bloc, context);
-                  } else {
-                    setState(() {
-                      isProgress = false;
-                      no_internet(context);
-                    });
-                  }
-                });
-              }
-            : null,
+            onPressed: snapshot.data == null ? null : () {
+              setState(() =>isProgress = true );
+              checkConnection(context).then((isConnect){
+                if ( isConnect == true ) {
+                  validator_login(bloc, context);
+                } else {
+                  setState(() {
+                    isProgress = false;
+                    no_internet(context);
+                  });
+                }
+              });
+            }
           ),
         );
       },
@@ -233,29 +229,24 @@ class loginState extends State<login_screen> with ValidatorMixin {
       child: Text('Forgot password?',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400)),
       onPressed: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => forgot_password()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => forgot_password()));
       },
     );
   }
 
-  Widget loading() {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  validator_login(Bloc bloc, BuildContext context) {
-    bloc.submitMethod(context).then((data) {
+  validator_login(Bloc bloc, BuildContext context) async{
+    await bloc.submitMethod(context).then((data) {
       setState(() { isProgress = false; });
       if (data == true) {
         print('success !');
-        // Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
+        Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
       }
     }).catchError((onError){
       setState(() => isProgress = false );
     });
+
+    // Reset User Input
+    userlogin.clear(); userpasswords.clear();
+    bloc.addEmail(null); bloc.addPassword(null);
   }
 }

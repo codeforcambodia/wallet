@@ -4,16 +4,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../../model/model.dart';
-import './login_screen.dart';
-import './sign_up_screen.dart';
-import 'dart:ui';
-import '../homeScreen/home_screen.dart';
-import 'dart:convert';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:uuid/uuid.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../../provider/Data_Store/data_storage.dart';
+import 'dart:ui';
+import 'dart:convert';
+import '../../model/model.dart';
+import './login_screen.dart';
+import './sign_up_screen.dart';
+import '../homeScreen/home_screen.dart';
 import '../../query_service/query_service.dart';
 import '../../provider/provider.dart';
 import '../../bloc/bloc.dart';
@@ -123,10 +122,10 @@ class loginState extends State<default_screen> {
       width: double.infinity,
       margin: EdgeInsets.only(left: 70.0, right: 70.0),
       decoration: BoxDecoration(
-        boxShadow: [
-          shadow()
-        ],
-        borderRadius: BorderRadius.circular(30.0),
+        // boxShadow: [
+        //   shadow()
+        // ],
+        borderRadius: BorderRadius.circular(35.0,),
         gradient: LinearGradient(
           colors: [
             Color(hexColor('#cB356b')),
@@ -143,8 +142,17 @@ class loginState extends State<default_screen> {
       width: double.infinity,
       margin: EdgeInsets.only(left: 70.0, right: 70.0),
       decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: Color(hexColor('#2C5364'))),
-        borderRadius: BorderRadius.circular(30.0)
+        // boxShadow: [
+        //   shadow()
+        // ],
+        gradient: LinearGradient(
+          colors: [
+            Color(hexColor('#384A65')),
+            Color(hexColor('#384A65'))
+          ],
+        ),
+        border: Border.all(width: 2.0, color: Color(hexColor('#82939B'))),
+        borderRadius: BorderRadius.circular(35.0)
       ),
       child: flatButton(sign_up(), 'Create new account', context),
     );
@@ -152,10 +160,10 @@ class loginState extends State<default_screen> {
   
   Widget flatButton(dynamic pushClass, String text, BuildContext context) {
     return FlatButton(
-      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+      padding: EdgeInsets.only(top: 22.0, bottom: 22.0),
       textColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      child: Text(text, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300,),),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35.0)),
+      child: Text(text, style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.w300,),),
       onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=> pushClass));
       }

@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import '../mixin/validator_mixin.dart';
 import '../rest_data/rest_api.dart';
 import '../provider/provider_widget.dart';
+import '../provider/small_data/data_storage.dart';
 
 class Bloc with ValidatorMixin {
   final _email = BehaviorSubject<String>();
@@ -13,12 +14,13 @@ class Bloc with ValidatorMixin {
 
   get emailStream => _email.stream.transform(validateEmail);
   get passwordStream => _password.stream.transform(validatePassword);
-  get submit => Observable.combineLatest2(
-      emailStream, passwordStream, (email, password) => true);
+  get submit => Observable.combineLatest2(emailStream, passwordStream, (email, password) {
+    if ( email == null && password == null ) return null;
+    return true;
+  } );
 
   // User sign up
   get emailSignUp => _usersignup.stream.transform(validateEmail);
-  // get register => Observable.fromIterable(emailSignUp).withLatestFrom(emailSignUp, ())
 
   Function(String) get addEmail => _email.sink.add;
   Function(String) get addPassword => _password.sink.add;
@@ -27,24 +29,27 @@ class Bloc with ValidatorMixin {
   Future<bool> submitMethod(BuildContext context) async {
     return await user_login(_email.value, _password.value)
     .then((onValue) {
-      if (onValue['message'] == null) return true;
+      if (onValue['message'] == null) {
+        setData(onValue, 'userToken');
+        return true;
+      }
       else dialog(context, (onValue['message']+' !'));
       return false;
     })
     .catchError((onError){
-      print(onError);
-      dialog(context, 'Something goes wrong!');
+      print("My error $onError");
+      dialog(context, 'Something goes wrong !');
       return false;
     });
   }
 
-  Future<bool> registerUser(BuildContext context) {
-    return user_register(_usersignup.value).then((onValue) {
+  Future<bool> registerUser(BuildContext context) async {
+    return await user_register(_usersignup.value).then((onValue) {
       dialog(context, (onValue['message']+' !'));
       return true;
     })
     .catchError((onError){
-      dialog(context, 'Something goes wrong!');
+      dialog(context, 'Something goes wrong !');
       return false;
     });
   }

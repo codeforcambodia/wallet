@@ -15,9 +15,10 @@ class sign_up extends StatefulWidget{
 }
 
 class sign_up_state extends State<sign_up> {
+
   bool isProgress = false;
   Widget build(BuildContext context) {
-    Bloc bloc = Provider.of(context);
+    Bloc bloc = Bloc();
     // Bloc bloc 
     return Scaffold(
       resizeToAvoidBottomPadding: true,
@@ -26,6 +27,7 @@ class sign_up_state extends State<sign_up> {
         child: body(context, bloc),
       ),
     );
+    
   }
 
   Widget body(BuildContext context, Bloc bloc) {
@@ -134,6 +136,10 @@ class sign_up_state extends State<sign_up> {
     .catchError((onError){
       setState(() => isProgress = false );
     });
+  }
+  
+  resetBloc(Bloc bloc) {
+    bloc.addUsersign(null);
   }
 }
 

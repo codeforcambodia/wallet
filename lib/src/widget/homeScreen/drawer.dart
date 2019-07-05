@@ -3,9 +3,9 @@ import './home_screen.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../provider/provider_widget.dart';
 
-final home = home_screen();
+var home = homeState();
 
-Widget drawerWidget(BuildContext context) {
+Widget drawerWidget(BuildContext context, Function fn) {
   return Drawer(
     child: new Column(
       children: <Widget>[
@@ -86,14 +86,13 @@ Widget drawerWidget(BuildContext context) {
             ),
           ),
         ),
-        signOutButton(context),
+        signOutButton(context, fn),
       ],
     ),
   );
 }
 
-Widget signOutButton(BuildContext context) {
-  var circular = home_screen();
+Widget signOutButton(BuildContext context, Function fn) {
   return Container(
     decoration: homeBackground(),
     child: FlatButton(
@@ -113,11 +112,8 @@ Widget signOutButton(BuildContext context) {
         ],
       ),
       onPressed: () {
-        // home.scaffoldKey
-      },
-      // onPressed: (){
-      //   circular.sig
-      // }
+        fn();
+      }
     ),
   );
 }

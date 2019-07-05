@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../model/model.dart';
-import '../../provider/Data_Store/data_storage.dart';
+import '../../provider/small_data/data_storage.dart';
 import '../../query_service/query_service.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../provider/provider_widget.dart';
@@ -41,8 +41,13 @@ class home_screen extends StatefulWidget {
 }
 
 class homeState extends State<home_screen> {
+
+  void initState() {
+    super.initState();
+  }
+
   TabController _tabController;
-  bool isProgess = false;
+  bool isProgress = false;
 
   QueryResult result;
 
@@ -56,8 +61,8 @@ class homeState extends State<home_screen> {
           key: _scaffoldKey,
           drawer: Stack(
             children: <Widget>[
-              drawerWidget(context),
-              isProgess == false ? Container() : progress()
+              drawerWidget(context,signOut),
+              isProgress == false ? Container() : progress()
             ],
           ),
           body: Stack(
@@ -67,6 +72,62 @@ class homeState extends State<home_screen> {
               bodyWidget(result, 0, bloc)
             ],
           )
+          // CustomScrollView(
+          //   slivers: <Widget>[
+              // SliverPersistentHeader(
+                // delegate: SliverPersistentHeaderDelegate(
+                  
+                // ),
+              //   pinned: true,
+              // ),
+          //     SliverAppBar(
+          //       title: Text("Sample Slivers"),
+          //       leading: Icon(Icons.menu),
+          //       backgroundColor: Colors.orangeAccent,
+          //       pinned: true,
+          //       expandedHeight: 100.0,
+          //     ),
+          //     SliverList(
+          //       delegate: SliverChildListDelegate([
+          //         FutureBuilder(
+          //           future: fetchData('userTokens'),
+          //           builder: (context, snapshot){
+          //             print(snapshot.data);
+          //             // if (snapshot.data != null )print(snapshot.data['id']);
+          //             return Container(child: Text('Hello world'),);
+          //           },
+          //         ),
+          //         ListTile(leading: Icon(Icons.volume_off), title: Text("Volume Off"),),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
+
+          //       ]),
+          //     )
+          //   ],
+          // )
+
           // FutureBuilder(
           //   future: fetchId('userID'),
           //   builder: (context, snapshot){
@@ -115,7 +176,6 @@ class homeState extends State<home_screen> {
           iconSize: 40.0,
           icon: Icon(Icons.account_circle),
           onPressed: () {
-            bloc.dispose();
             _scaffoldKey.currentState.openDrawer();
           },
         ),
@@ -126,7 +186,7 @@ class homeState extends State<home_screen> {
   //body widget
   Widget bodyWidget(QueryResult result, int total, Bloc bloc) {
     return Container(
-        child: Column(
+      child: Column(
       children: <Widget>[
         Container(
           width: double.infinity,
@@ -134,12 +194,13 @@ class homeState extends State<home_screen> {
           color: Colors.black,
           child: Stack(
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/header.jpeg'),
-                        fit: BoxFit.fill)),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //       image: DecorationImage(
+              //           image: AssetImage('assets/header.jpeg'),
+              //           fit: BoxFit.fill)),
+              // ),
+              background(),
               Container(
                 margin: EdgeInsets.only(bottom: 15.0),
                 child: Align(
@@ -231,16 +292,6 @@ class homeState extends State<home_screen> {
                             ),
                           ),
                         ),
-                        // SingleChildScrollView(
-                        //   scrollDirection: Axis.horizontal,
-                        //   child: Container(
-                        //     margin: EdgeInsets.only(left: 10.0),
-                        //     child: Text("${result.data['user_data'][0]['books'][index]['title']} hello mother fucker bitch",style: TextStyle(
-                        //       fontSize: 18.0,
-                        //       fontWeight: FontWeight.w300
-                        //     ),),
-                        //   )
-                        // )
                       ],
                     ),
                   ),
@@ -253,15 +304,15 @@ class homeState extends State<home_screen> {
     ));
   }
 
-  void signOut(Bloc bloc) {
-    // if(widget.google != null) widget.google.signOut();
+  void signOut() {
+    print('Hello sign out');
+    if(widget.google != null) widget.google.signOut();
     setState(() {
-      isProgess = true;
+      isProgress = true;
     });
     Timer(Duration(seconds: 2), () {
       setState(() {
-        isProgess = false;
-        bloc.dispose();
+        isProgress = false;
       });
       Navigator.of(context).popUntil(ModalRoute.withName('/'));
     });
