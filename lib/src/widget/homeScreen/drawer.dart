@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './home_screen.dart';
+import './profile_screen.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../provider/provider_widget.dart';
 
@@ -49,7 +50,7 @@ Widget drawerWidget(BuildContext context, Function fn) {
                     ],
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> home_screen()));
                   },
                 ),
                 ListTile(
@@ -65,7 +66,7 @@ Widget drawerWidget(BuildContext context, Function fn) {
                     ],
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => profile()));
                   },
                 ),
                 ListTile(

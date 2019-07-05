@@ -50,8 +50,8 @@ class homeState extends State<home_screen> {
   bool isProgress = false;
 
   QueryResult result;
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   //Widget Build
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);

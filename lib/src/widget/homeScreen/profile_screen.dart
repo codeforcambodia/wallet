@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import '../../bloc/bloc.dart';
+import '../../provider/provider.dart';
+import './drawer.dart';
 
-class profile_screen extends StatefulWidget{
+class profile extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -8,23 +12,38 @@ class profile_screen extends StatefulWidget{
   }
 }
 
-class profile_state extends State<profile_screen>{
+class profile_state extends State<profile>{
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: drawerWidget(context, signOut),
+      appBar: AppBar(title: Text('Profile',)),
       body: Center(
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Text('Hello page 2'),
+            new Text('Profile'),
             new RaisedButton(
               child: Text('Sign out'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }
             )
           ],
         ),
       ),
     );
+  }
+  void signOut() {
+    print('Hello sign out');
+    // if(widget.google != null) widget.google.signOut();
+    // setState(() {
+    //   isProgress = true;
+    // });
+    Timer(Duration(seconds: 2), () {
+      // setState(() {
+        // isProgress = false;
+      // });
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+    });
   }
 }
