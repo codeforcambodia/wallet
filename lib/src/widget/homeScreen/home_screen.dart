@@ -20,12 +20,12 @@ class home_screen extends StatefulWidget {
   LinkedInUserModel userModel;
   User_Data dataSignUp;
 
-  home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) {
-    print(dataFromGG);
-  }
-  home_screen.fromLinkedIn({Key key, this.userModel}) {
-    print(userModel);
-  }
+  // home_screen.fromGoogle({Key key, this.dataFromGG, this.google}) {
+  //   print(dataFromGG);
+  // }
+  // home_screen.fromLinkedIn({Key key, this.userModel}) {
+  //   print(userModel);
+  // }
 
   home_screen.fromSignUp(this.dataSignUp) {
     print(dataSignUp.firstName);
@@ -35,7 +35,6 @@ class home_screen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return homeState();
   }
 }
@@ -55,99 +54,27 @@ class homeState extends State<home_screen> {
   //Widget Build
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
+    // ValueNotifier<GraphQLClient> client = ValueNotifier(
+      
+    // )
     return new Theme(
       data: new ThemeData(brightness: Brightness.dark),
       child: new Scaffold(
-          key: _scaffoldKey,
-          drawer: Stack(
-            children: <Widget>[
-              drawerWidget(context,signOut),
-              isProgress == false ? Container() : progress()
-            ],
-          ),
-          body: Stack(
-            children: <Widget>[
-              background(),
-              // totalPrice(result.data['user_data'][0]['books'])
-              bodyWidget(result, 0, bloc)
-            ],
-          )
-          // CustomScrollView(
-          //   slivers: <Widget>[
-              // SliverPersistentHeader(
-                // delegate: SliverPersistentHeaderDelegate(
-                  
-                // ),
-              //   pinned: true,
-              // ),
-          //     SliverAppBar(
-          //       title: Text("Sample Slivers"),
-          //       leading: Icon(Icons.menu),
-          //       backgroundColor: Colors.orangeAccent,
-          //       pinned: true,
-          //       expandedHeight: 100.0,
-          //     ),
-          //     SliverList(
-          //       delegate: SliverChildListDelegate([
-          //         FutureBuilder(
-          //           future: fetchData('userTokens'),
-          //           builder: (context, snapshot){
-          //             print(snapshot.data);
-          //             // if (snapshot.data != null )print(snapshot.data['id']);
-          //             return Container(child: Text('Hello world'),);
-          //           },
-          //         ),
-          //         ListTile(leading: Icon(Icons.volume_off), title: Text("Volume Off"),),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_mute), title: Text("Volume Mute")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-          //         ListTile(leading: Icon(Icons.volume_down), title: Text("Volume Down")),
-
-          //       ]),
-          //     )
-          //   ],
-          // )
-
-          // FutureBuilder(
-          //   future: fetchId('userID'),
-          //   builder: (context, snapshot){
-          //     return Query(
-          //       options: QueryOptions(document: query(snapshot.data)),
-          //       builder: (QueryResult result, {VoidCallback refetch}){
-          //         if ( result.data == null ) return Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //         return Stack(
-          //           children: <Widget>[
-          //             background(),
-          //             bodyWidget(result, totalPrice(result.data['user_data'][0]['books']))
-          //           ],
-          //         );
-          //       },
-          //     );
-          //   },
-          // ),
-          ),
+        key: _scaffoldKey,
+        drawer: Stack(
+          children: <Widget>[
+            drawerOnly(signOut),
+            isProgress == false ? Container() : progress()
+          ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            background(),
+            // totalPrice(result.data['user_data'][0]['books'])
+            bodyWidget(result, 0, bloc)
+          ],
+        )
+      )
     );
   }
 

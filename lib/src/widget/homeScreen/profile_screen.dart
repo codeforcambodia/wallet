@@ -18,7 +18,7 @@ class profile_state extends State<profile>{
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: drawerWidget(context, signOut),
+      drawer: drawerOnly(signOut),
       appBar: AppBar(title: Text('Profile',)),
       body: Center(
         child: new Column(
