@@ -13,14 +13,11 @@ class drawerOnly extends StatelessWidget{
   HttpLink _link = HttpLink(uri: "https://api.zeetomic.com/gql");
 
   drawerOnly(this.fn);
+  
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: fetchData('userToken'),
       builder: (context, snapshot){
-        if ( snapshot.data != null) {
-          print('Hello snapshot');
-          myGrapQl(snapshot);
-        }
         return GraphQLProvider(
           client: myGrapQl(snapshot),
           child: Drawer(

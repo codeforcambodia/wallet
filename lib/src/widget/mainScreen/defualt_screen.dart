@@ -85,7 +85,7 @@ class loginState extends State<default_screen> {
       return GoogleSignInButton(
         darkMode: true,
         onPressed: () {
-          googleSignUp();
+          // googleSignUp();
         },
       );
     } else {
@@ -170,12 +170,12 @@ class loginState extends State<default_screen> {
     );
   }
 
-  void googleSignUp() {
-    _googleSignIn.signIn(); 
-    _googleSignIn.onCurrentUserChanged.listen((account) {
-      if ( account != null ) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account, google: _googleSignIn,)));
-    });
-  }
+  // void googleSignUp() {
+  //   _googleSignIn.signIn(); 
+  //   _googleSignIn.onCurrentUserChanged.listen((account) {
+  //     if ( account != null ) Navigator.push(context, MaterialPageRoute(builder: (context) => home_screen.fromGoogle(dataFromGG: account, google: _googleSignIn,)));
+  //   });
+  // }
 
   void googleSignOut() {
     _googleSignIn.signOut();

@@ -27,11 +27,11 @@ class home_screen extends StatefulWidget {
   //   print(userModel);
   // }
 
-  home_screen.fromSignUp(this.dataSignUp) {
-    print(dataSignUp.firstName);
-  }
-
   home_screen();
+
+  // home_screen.fromSignUp(this.dataSignUp) {
+  //   print(dataSignUp.firstName);
+  // }
 
   @override
   State<StatefulWidget> createState() {
@@ -40,10 +40,6 @@ class home_screen extends StatefulWidget {
 }
 
 class homeState extends State<home_screen> {
-
-  void initState() {
-    super.initState();
-  }
 
   TabController _tabController;
   bool isProgress = false;
@@ -54,9 +50,6 @@ class homeState extends State<home_screen> {
   //Widget Build
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
-    // ValueNotifier<GraphQLClient> client = ValueNotifier(
-      
-    // )
     return new Theme(
       data: new ThemeData(brightness: Brightness.dark),
       child: new Scaffold(
@@ -90,11 +83,11 @@ class homeState extends State<home_screen> {
   Widget appbarWidget(Bloc bloc) {
     return AppBar(
       centerTitle: false,
-      title: Image.asset(
-        'assets/zeetomic-logo-header.png',
-        width: 100.0,
-        height: 100.0,
-      ),
+      // title: Image.asset(
+      //   'assets/zeetomic-logo-header.png',
+      //   width: 100.0,
+      //   height: 100.0,
+      // ),
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       automaticallyImplyLeading: false,
@@ -121,12 +114,6 @@ class homeState extends State<home_screen> {
           color: Colors.black,
           child: Stack(
             children: <Widget>[
-              // Container(
-              //   decoration: BoxDecoration(
-              //       image: DecorationImage(
-              //           image: AssetImage('assets/header.jpeg'),
-              //           fit: BoxFit.fill)),
-              // ),
               background(),
               Container(
                 margin: EdgeInsets.only(bottom: 15.0),
