@@ -1,4 +1,5 @@
-import 'package:Wallet_Apps/src/Widget/mainScreen/sign_up_screen.dart';
+import 'package:Wallet_Apps/src/provider/small_data/data_storage.dart';
+import 'package:Wallet_Apps/src/widget/homeScreen/setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter/rendering.dart';
@@ -18,32 +19,36 @@ void main () {
 class App extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // final HttpLink _httpLink = HttpLink(uri: 'https://hasura-flutter.herokuapp.com/v1/graphql');
-    // final ValueNotifier<GraphQLClient> client = ValueNotifier(
-    //   GraphQLClient(
-    //     link: _httpLink as Link,
-    //     cache: OptimisticCache(
-    //       dataIdFromObject: typenameDataIdFromObject,
-    //     )
-    //   )
-    // );
-    // return GraphQLProvider(
-    //   client: client,
-    //   child: CacheProvider(
-    //     child: Provider(
-    //       child: 
-    //     ),
-    //   ),
-    // );
-    return Provider(
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // is not restarted.
-          primarySwatch: Colors.blue,
-        ),
-        home: profile()
-      )
+    final HttpLink _httpLink = HttpLink(uri: 'https://api.zeetomic.com/gql');
+    return FutureBuilder(
+      future: fetchData('userToken'),
+      builder: (context, snapshot){
+        if (snapshot.data != null) print(' Main dart retrieved data');
+        else print('Main dart not yet retrieve');
+        final AuthLink authLink = AuthLink(getToken: () async => 'Bearer ${snapshot.data != null ? snapshot.data['TOKEN'] : ""}');
+        final Link link = authLink.concat(_httpLink as Link);
+        final ValueNotifier<GraphQLClient> client = ValueNotifier(
+          GraphQLClient(
+            link: link,
+            cache: InMemoryCache()
+          )
+        );
+        return GraphQLProvider(
+          client: client,
+          child: CacheProvider(
+            child: Provider(
+              child: MaterialApp(
+                title: 'Flutter Demo',
+                theme: ThemeData(
+                  // is not restarted.
+                  primarySwatch: Colors.blue,
+                ),
+                home: default_screen()
+              )
+            ),
+          ),
+        );
+      },
     );
   }
 }

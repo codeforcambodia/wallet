@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+// import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:linkedin_login/linkedin_login.dart';
@@ -13,7 +13,6 @@ import '../../model/model.dart';
 import './login_screen.dart';
 import './sign_up_screen.dart';
 import '../homeScreen/home_screen.dart';
-import '../../query_service/query_service.dart';
 import '../../provider/provider.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/hexaColorConvert.dart';

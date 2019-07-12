@@ -1,6 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
-
-String user_Id;
+import '../model/model_profile.dart';
 
 final String user_login_data = """
   query{
@@ -9,12 +8,6 @@ final String user_login_data = """
       email
       password
     }
-  }
-""";
-
-final String addMutation = """
-  mutation addData() {
-
   }
 """;
 

@@ -1,4 +1,6 @@
 import 'package:Wallet_Apps/src/provider/hexaColorConvert.dart';
+import 'package:Wallet_Apps/src/widget/homeScreen/profile_screen.dart';
+import 'package:Wallet_Apps/src/widget/homeScreen/setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:ui';
@@ -10,7 +12,7 @@ import '../../mixin/validator_mixin.dart';
 import '../../bloc/bloc.dart';
 import '../../provider/provider.dart';
 import '../../provider/small_data/data_storage.dart';
-import '../../query_service/query_service.dart';
+import '../../graphql_service/query_service.dart';
 import '../../provider/provider_widget.dart';
 import '../forgotPassword/forgot_password.dart';
 import '../../provider/check_connection.dart';
@@ -48,19 +50,19 @@ class loginState extends State<login_screen> with ValidatorMixin {
     Bloc bloc = Bloc();
     QueryResult result;
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: bodyWidget(bloc, result, context)
-        // Query(
-        //   options: QueryOptions(document: user_login_data),
-        //   builder: (QueryResult result, {VoidCallback refetch}){
-        //     // if (result.data != null) {
-        //     //   isProgress = false;
-        //     //   return CircularProgressIndicator();
-        //     // }
-        //     return
-        //   },
-        // ),
-        );
+      resizeToAvoidBottomPadding: false,
+      body: bodyWidget(bloc, result, context)
+      // Query(
+      //   options: QueryOptions(document: user_login_data),
+      //   builder: (QueryResult result, {VoidCallback refetch}){
+      //     // if (result.data != null) {
+      //     //   isProgress = false;
+      //     //   return CircularProgressIndicator();
+      //     // }
+      //     return
+      //   },
+      // ),
+    );
   }
 
   //body widget
@@ -239,7 +241,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
       setState(() { isProgress = false; });
       if (data == true) {
         print('success !');
-        Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
+        Navigator.push(context, MaterialPageRoute( builder: (context) => profile()));
       }
     }).catchError((onError){
       setState(() => isProgress = false );

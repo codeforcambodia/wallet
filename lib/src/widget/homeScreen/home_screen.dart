@@ -1,4 +1,5 @@
-import 'package:Wallet_Apps/src/query_service/query_service.dart';
+import 'package:Wallet_Apps/src/widget/homeScreen/profile_screen.dart';
+import 'package:Wallet_Apps/src/widget/homeScreen/setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,7 +7,6 @@ import 'package:linkedin_login/linkedin_login.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../model/model.dart';
 import '../../provider/small_data/data_storage.dart';
-import '../../query_service/query_service.dart';
 import '../../provider/hexaColorConvert.dart';
 import '../../provider/provider_widget.dart';
 import './drawer.dart';
@@ -46,6 +46,7 @@ class homeState extends State<home_screen> {
 
   QueryResult result;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final HttpLink _link = HttpLink(uri: "https://api.zeetomic.com/gql");
 
   //Widget Build
   Widget build(BuildContext context) {
@@ -60,12 +61,32 @@ class homeState extends State<home_screen> {
             isProgress == false ? Container() : progress()
           ],
         ),
-        body: Stack(
-          children: <Widget>[
-            background(),
-            // totalPrice(result.data['user_data'][0]['books'])
-            bodyWidget(result, 0, bloc)
-          ],
+        body: FutureBuilder(
+          future: fetchData('userToken'),
+          builder: (context, snapshot){
+            String query  = """
+              query{
+                queryUserById(id: "${ snapshot.data != null ? snapshot.data['id'] : ''}"){
+                  id
+                }
+              }
+            """;
+            return snapshot.data == null 
+            ? Center(child: CircularProgressIndicator(),) 
+            : Stack(
+              children: <Widget>[
+                background(),
+                // totalPrice(result.data['user_data'][0]['books'])
+                Query(
+                  options: QueryOptions(document: query),
+                  builder: (QueryResult result, {VoidCallback refetch}){
+                    if (result.data != null) print(result.data['queryUserById']);
+                    return bodyWidget(result, 0, bloc);
+                  },
+                )
+              ],
+            );
+          },
         )
       )
     );
@@ -126,7 +147,13 @@ class homeState extends State<home_screen> {
                       )),
                 ),
               ),
-              appbarWidget(bloc)
+              appbarWidget(bloc),
+              RaisedButton(
+                child: Text('Click'),
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => setting()));
+                },
+              )
             ],
           ),
         ),
@@ -134,8 +161,7 @@ class homeState extends State<home_screen> {
           margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
           child: Center(
               child: Text('HOLDING',
-                  style:
-                      TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300))),
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300))),
         ),
         Container(
           margin: EdgeInsets.only(top: 5.0, bottom: 15.0),
@@ -230,5 +256,17 @@ class homeState extends State<home_screen> {
       });
       Navigator.of(context).popUntil(ModalRoute.withName('/'));
     });
+  }
+
+  myGrapQl(AsyncSnapshot snapshot, ){
+    final AuthLink authLink = AuthLink(getToken: () async => 'Bearer ${snapshot.data['TOKEN']}');
+    final Link link = authLink.concat(_link as Link);
+    ValueNotifier<GraphQLClient> client = ValueNotifier(
+      GraphQLClient(
+        link: link,
+        cache: InMemoryCache(),
+      )
+    );
+    return client;
   }
 }

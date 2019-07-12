@@ -61,7 +61,8 @@ class drawerOnly extends StatelessWidget{
                             ],
                           ),
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> home_screen()));
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> home_screen()));
                           },
                         ),
                         ListTile(
@@ -77,7 +78,8 @@ class drawerOnly extends StatelessWidget{
                             ],
                           ),
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => profile()));
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => profile()));
                           },
                         ),
                         ListTile(
@@ -93,6 +95,7 @@ class drawerOnly extends StatelessWidget{
                             ],
                           ),
                           onTap: () {
+                            Navigator.pop(context);
                             Navigator.push(context, MaterialPageRoute(builder: (context)=> setting()));
                           },
                         )
