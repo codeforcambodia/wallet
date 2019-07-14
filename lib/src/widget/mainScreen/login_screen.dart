@@ -70,6 +70,32 @@ class loginState extends State<login_screen> with ValidatorMixin {
     return Stack(
       children: <Widget>[
         background(),
+        // Center(
+        //   child: SingleChildScrollView(
+        //     child: Column(
+        //       children: <Widget>[
+        //         TextField(
+        //           decoration: InputDecoration(
+        //             labelText: 'Emal',
+        //           ),
+        //         ),
+        //         Container(margin: EdgeInsets.only(bottom: 20.0)),
+        //         TextField(
+        //           decoration: InputDecoration(
+        //             labelText: 'Emal',
+        //           ),
+        //         ),
+
+        //         Container(margin: EdgeInsets.only(bottom: 20.0)),
+        //         TextField(
+        //           decoration: InputDecoration(
+        //             labelText: 'Emal',
+        //           ),
+        //         )
+        //       ],
+        //     ),
+        //   )
+        // ),
         Center(
           child: SingleChildScrollView(
             child: Container(
@@ -241,7 +267,7 @@ class loginState extends State<login_screen> with ValidatorMixin {
       setState(() { isProgress = false; });
       if (data == true) {
         print('success !');
-        Navigator.push(context, MaterialPageRoute( builder: (context) => profile()));
+        Navigator.push(context, MaterialPageRoute( builder: (context) => home_screen()));
       }
     }).catchError((onError){
       setState(() => isProgress = false );

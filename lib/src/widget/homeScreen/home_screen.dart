@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linkedin_login/linkedin_login.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'dart:convert';
 import '../../model/model.dart';
 import '../../provider/small_data/data_storage.dart';
 import '../../provider/hexaColorConvert.dart';
@@ -33,7 +34,6 @@ class home_screen extends StatefulWidget {
   //   print(dataSignUp.firstName);
   // }
 
-  @override
   State<StatefulWidget> createState() {
     return homeState();
   }
@@ -43,8 +43,6 @@ class homeState extends State<home_screen> {
 
   TabController _tabController;
   bool isProgress = false;
-
-  QueryResult result;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final HttpLink _link = HttpLink(uri: "https://api.zeetomic.com/gql");
 
@@ -64,10 +62,13 @@ class homeState extends State<home_screen> {
         body: FutureBuilder(
           future: fetchData('userToken'),
           builder: (context, snapshot){
+            /* Retrieve user token and id from local storage */
             String query  = """
               query{
                 queryUserById(id: "${ snapshot.data != null ? snapshot.data['id'] : ''}"){
                   id
+                  email
+                  passwords
                 }
               }
             """;
@@ -80,7 +81,7 @@ class homeState extends State<home_screen> {
                 Query(
                   options: QueryOptions(document: query),
                   builder: (QueryResult result, {VoidCallback refetch}){
-                    if (result.data != null) print(result.data['queryUserById']);
+                    if (result.data != null) setData(Map<String, dynamic>.from(result.data['queryUserById']), 'userLogin');
                     return bodyWidget(result, 0, bloc);
                   },
                 )
@@ -148,12 +149,6 @@ class homeState extends State<home_screen> {
                 ),
               ),
               appbarWidget(bloc),
-              RaisedButton(
-                child: Text('Click'),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => setting()));
-                },
-              )
             ],
           ),
         ),
@@ -268,5 +263,9 @@ class homeState extends State<home_screen> {
       )
     );
     return client;
+  }
+
+  void saveUserLogin(QueryResult result) {
+    if (result.data != null) setData(result.data, 'userLogin');
   }
 }

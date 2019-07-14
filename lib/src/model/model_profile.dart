@@ -23,7 +23,7 @@ class ProfileModel {
       "document_id": document_id,
       "user_status": user_status,
       "tempToken": tempToken,
-      "create_id": create_id,
+      "created_id": create_id,
       "updated_id": updated_id
     };
     // var convert = json.encode(data);

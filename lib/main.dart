@@ -23,8 +23,6 @@ class App extends StatelessWidget{
     return FutureBuilder(
       future: fetchData('userToken'),
       builder: (context, snapshot){
-        if (snapshot.data != null) print(' Main dart retrieved data');
-        else print('Main dart not yet retrieve');
         final AuthLink authLink = AuthLink(getToken: () async => 'Bearer ${snapshot.data != null ? snapshot.data['TOKEN'] : ""}');
         final Link link = authLink.concat(_httpLink as Link);
         final ValueNotifier<GraphQLClient> client = ValueNotifier(

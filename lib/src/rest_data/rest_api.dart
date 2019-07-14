@@ -6,7 +6,6 @@ final _url = "https://api.zeetomic.com";
 
 Future<Map<String, dynamic>> user_login(String email, String passwords) async {
   final response = await http.post('$_url/loginuri', body: {"email": email, "passwords": passwords});
-  print(response.body);
   return json.decode(response.body);
 }
 
